@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:streamline/auth/login.dart';
 import 'package:streamline/auth/signup.dart';
@@ -6,7 +7,6 @@ import 'package:streamline/main_screens/home.dart';
 import 'main_screens/affirmations.dart';
 import 'main_screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,13 +25,15 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Barlow',
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/welcome_screen',
+      initialRoute: '/home',
       routes: {
         '/welcome_screen': (context) => const WelcomeScreen(),
         '/sign_up': (context) => const SignUp(),
         '/log_in': (context) => const LogIn(),
-        '/affirmations': (context) => const AffirmationsScreen(),
         '/home': (context) => const HomeScreen(),
+        '/affirmations': (context) => AffirmationsScreen(
+              documentId: FirebaseAuth.instance.currentUser!.uid,
+            ),
       },
     );
   }
