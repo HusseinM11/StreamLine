@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Barlow',
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/home',
+      initialRoute: '/welcome_screen',
       routes: {
         '/welcome_screen': (context) => const WelcomeScreen(),
         '/sign_up': (context) => const SignUp(),

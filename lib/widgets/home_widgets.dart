@@ -50,7 +50,7 @@ class HabitTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
           width: 130,
           height: 10,
@@ -120,23 +120,24 @@ class HabitTile extends StatelessWidget {
   }
 }
 
+
+
 class DailyStatsTab extends StatelessWidget {
   final String label;
   final int completed;
-  const DailyStatsTab({
-    Key? key, required this.label , required this.completed
-  }) : super(key: key);
+  const DailyStatsTab({Key? key, required this.label, required this.completed})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(completed.toString(), style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w700)),
+        Text(completed.toString(),
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w700)),
         Text(label,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
       ],
     );
   }
 }
-
