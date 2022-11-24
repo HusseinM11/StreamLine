@@ -89,13 +89,13 @@ class _SignUpState extends State<SignUp> {
                         'StreamLine',
                         style: TextStyle(color: Colors.orange, fontSize: 30),
                       ),
-                      SizedBox(height: 47),
+                      const SizedBox(height: 47),
                       const Text('Create Account',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 48,
                               fontWeight: FontWeight.w800)),
-                      SizedBox(height: 80),
+                      const SizedBox(height: 80),
                       Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: Column(
@@ -103,7 +103,7 @@ class _SignUpState extends State<SignUp> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: TextFormField(
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500),
                                 validator: (value) {
@@ -124,7 +124,7 @@ class _SignUpState extends State<SignUp> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: TextFormField(
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500),
                                 validator: (value) {
@@ -145,7 +145,7 @@ class _SignUpState extends State<SignUp> {
                                 decoration: textFormDecoration.copyWith(
                                   labelText: 'Email Address',
                                   hintText: 'Enter your email',
-                                  icon: Icon(Icons.email,
+                                  icon: const Icon(Icons.email,
                                       color: Color(0xFFFDEAC1)),
                                 ),
                               ),
@@ -153,7 +153,7 @@ class _SignUpState extends State<SignUp> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: TextFormField(
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500),
                                 validator: (value) {
@@ -177,11 +177,11 @@ class _SignUpState extends State<SignUp> {
                                           passwordVisible
                                               ? Icons.visibility
                                               : Icons.visibility_off,
-                                          color: Color(0xFFFDEAC1),
+                                          color: const Color(0xFFFDEAC1),
                                         )),
                                     labelText: 'Password',
                                     hintText: 'Enter your password',
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.vpn_key,
                                       color: Color(0xFFFDEAC1),
                                     )),
@@ -190,11 +190,11 @@ class _SignUpState extends State<SignUp> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       Padding(
                         padding: const EdgeInsets.all(15),
                         child: processing == true
-                            ? Center(child: CircularProgressIndicator(color: Colors.white))
+                            ? const Center(child: CircularProgressIndicator(color: Colors.white))
                             : AuthButton(
                                 label: 'Submit',
                                 onPressed: () {

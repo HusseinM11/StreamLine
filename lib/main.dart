@@ -5,6 +5,7 @@ import 'package:streamline/auth/signup.dart';
 import 'package:streamline/main_screens/home.dart';
 
 import 'main_screens/affirmations.dart';
+import 'main_screens/habits.dart';
 import 'main_screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Barlow',
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/welcome_screen',
+      initialRoute: '/home',
       routes: {
         '/welcome_screen': (context) => const WelcomeScreen(),
         '/sign_up': (context) => const SignUp(),
