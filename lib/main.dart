@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:streamline/auth/login.dart';
 import 'package:streamline/auth/signup.dart';
 import 'package:streamline/main_screens/home.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
         fontFamily: 'Barlow',

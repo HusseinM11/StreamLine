@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _tabs = [
     HomeContentScreen(documentId: FirebaseAuth.instance.currentUser!.uid),
-    const HabitsScreen(),
+     HabitsScreen(),
     const ProgressScreen(),
     const SettingsScreen(),
   ];
