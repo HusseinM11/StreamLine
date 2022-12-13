@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -28,24 +30,42 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
   late String title;
   String? description;
   int repeat = 1;
-  IconData _icon = CupertinoIcons.arrowtriangle_down_square;
+  IconData _icon = Icons.check_circle_rounded;
   final habitsController = Get.put(HabitsController());
 
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
 
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
+
+  final String _uid = FirebaseAuth.instance.currentUser!.uid;
+
   _pickIcon() async {
     IconData? icon =
         await FlutterIconPicker.showIconPicker(context, iconPackModes: [
-      IconPack.cupertino,
+      IconPack.material,
     ]);
 
     _icon = icon!;
     setState(() {});
   }
 
-  void saveHabit() {
-    habitsController.addHabit(Habit(
+  /* void saveHabit() {
+    users.doc(_uid).collection('habits').add({
+      'habitname': title,
+      'description': description,
+      'repeatdaily': repeat,
+      'iscompleted': false,
+      'icon': _icon.codePoint,
+      'completedcount': 0,
+      'timeadded': Timestamp.now()
+    });
+    habitsController.update();
+    print(users.doc(_uid));
+    print(_icon);
+
+    /* habitsController.addHabit(Habit(
         habitName: title,
         repeatDaily: repeat,
         isCompleted: false,
@@ -53,9 +73,9 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
         completedCount: 0,
         description: description,
         timeAdded: DateTime.now()));
-
+ */
     Navigator.pop(context);
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -119,14 +139,12 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                                         child: const Padding(
                                           padding: EdgeInsets.all(12.0),
                                           child: Icon(
-                                              CupertinoIcons
-                                                  .arrowtriangle_down_square,
+                                              Icons.check_circle_rounded,
                                               size: 60,
                                               color: AppColors.orange2),
                                         )),
                               ),
-                              const Text(
-                                  'Choose icon',
+                              const Text('Choose icon',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700,
@@ -276,7 +294,14 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30))),
                               onPressed: () {
-                                saveHabit();
+                                HabitsController().addHabit(
+                                    habitName: title,
+                                    description: description,
+                                    repeat: repeat,
+                                    completedCount: 0,
+                                    isCompleted: false,
+                                    icon: _icon,
+                                    timeAdded: Timestamp.now(),);
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(

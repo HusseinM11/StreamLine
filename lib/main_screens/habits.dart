@@ -50,7 +50,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
           
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical:25),
-            child: GetBuilder<HabitsController>(builder: (controller) {
+            child: GetX<HabitsController>(builder: (controller) {
               return GridView.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,

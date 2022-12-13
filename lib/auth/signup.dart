@@ -34,12 +34,12 @@ class _SignUpState extends State<SignUp> {
       try {
         await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
-        CollectionReference customers =
+        CollectionReference users =
             FirebaseFirestore.instance.collection('users');
 
         _uid = FirebaseAuth.instance.currentUser!.uid;
 
-        await customers
+        await users
             .doc(_uid)
             .set({'name': name, 'email': email, 'uid': _uid});
         _formKey.currentState!.reset();
