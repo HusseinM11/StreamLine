@@ -3,29 +3,25 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:streamline/controller/habits_controller.dart';
-import 'package:streamline/main_screens/progress.dart';
-import 'package:streamline/main_screens/settings.dart';
+import 'package:streamline/view/main_screens/progress.dart';
+import 'package:streamline/view/main_screens/settings.dart';
 import 'package:streamline/widgets/dialog_box.dart';
 import 'package:streamline/widgets/habit_circle.dart';
 
 import 'package:streamline/model/habit.dart';
 import '../sub_screens/edit_habit.dart';
 import '../sub_screens/new_habit_screen.dart';
-import '../constants/colors.dart';
-import '../widgets/snackbar.dart';
+import '../../constants/colors.dart';
+import '../../widgets/snackbar.dart';
 import 'home.dart';
 
-class HabitsScreen extends StatefulWidget {
+class HabitsScreen extends StatelessWidget {
   final habitsController = Get.put(HabitsController());
   HabitsScreen({super.key});
 
-  @override
-  State<HabitsScreen> createState() => _HabitsScreenState();
-}
-
-class _HabitsScreenState extends State<HabitsScreen> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
+
   String date = DateFormat("MMMM, dd, yyyy").format(DateTime.now());
 
   editHabit(int index, _scaffoldkey) {
@@ -47,9 +43,8 @@ class _HabitsScreenState extends State<HabitsScreen> {
                   image: DecorationImage(
                       image: AssetImage('images/habits/background.png'),
                       fit: BoxFit.fill))),
-          
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical:25),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25),
             child: GetX<HabitsController>(builder: (controller) {
               return GridView.count(
                 crossAxisCount: 2,
@@ -58,17 +53,21 @@ class _HabitsScreenState extends State<HabitsScreen> {
                 children: List.generate(controller.habits.length, (index) {
                   return GestureDetector(
                       onLongPress: () {
-                        controller.completeHabit(index, _scaffoldKey);
+                        if (controller.habits[index].completedCount ==
+                            controller.habits[index].repeatDaily) {
+                          MyMessageHandler.showSnackBar(_scaffoldKey, 'You\'ve already finished this habit for the day!');
+                        } else {
+                          controller.completeHabit(
+                              habitId: controller.habits[index].habitId,
+                              uid: controller.uid, completedCount: controller.habits[index].completedCount, repeat: controller.habits[index].repeatDaily);
+                        }
                       },
                       onDoubleTap: () {
                         editHabit(index, _scaffoldKey);
                       },
                       child: HabitCircle(
-                        habitName: controller.habits[index].habitName,
-                        icon: controller.habits[index].icon,
-                        habitCount: controller.habits[index].completedCount,
-                        habitDone: controller.habits[index].isCompleted,
-                        repeatDaily: controller.habits[index].repeatDaily,
+                        habit: controller.habits[index],
+                        uid: controller.uid,
                       ));
                 }),
               );
@@ -79,7 +78,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
               child: FloatingActionButton(
                   backgroundColor: AppColors.orange,
                   onPressed: () {
-                    widget.habitsController.habits.length == 6
+                    habitsController.habits.length == 6
                         ? MyMessageHandler.showSnackBar(_scaffoldKey,
                             'You\'ve already reached the maximum number of habits.')
                         : Navigator.push(

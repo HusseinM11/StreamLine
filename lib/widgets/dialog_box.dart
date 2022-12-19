@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:streamline/widgets/dialog_button.dart';
+
+import '../controller/todo_controller.dart';
 
 class DialogBox extends StatelessWidget {
   final controller;
   Function() onAdd;
   Function() onCancel;
    DialogBox({super.key, required this.controller, required this.onCancel, required this.onAdd});
+  final todosController = Get.put(TodosController());
 
   @override
   Widget build(BuildContext context) {

@@ -1,12 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:streamline/constants/firebase_constants.dart';
 import 'package:streamline/widgets/auth_widgets.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:streamline/widgets/snackbar.dart';
-
-
-
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -19,8 +15,6 @@ class _LogInState extends State<LogIn> {
   late String name;
   late String email;
   late String password;
-  late String profileImage;
-  late String _uid;
   bool processing = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
@@ -32,33 +26,15 @@ class _LogInState extends State<LogIn> {
       processing = true;
     });
     if (_formKey.currentState!.validate()) {
-      try {
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
+    
+        authController.login(email: email, password: password);
 
         _formKey.currentState!.reset();
-
-        Navigator.pushReplacementNamed(context, '/affirmations');
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          setState(() {
-            processing = false;
-          });
-          MyMessageHandler.showSnackBar(
-              _scaffoldKey, 'No user found with that email.');
-        } else if (e.code == 'wrong-password') {
-          setState(() {
-            processing = false;
-          });
-          MyMessageHandler.showSnackBar(_scaffoldKey, 'Wrong password.');
-        }
-      }
     } else {
       setState(() {
         processing = false;
       });
-      MyMessageHandler.showSnackBar(_scaffoldKey, 'please fill all fields.');
-    }
+Get.snackbar('Please fill all fields.', 'Error');    }
   }
 
   @override
@@ -112,7 +88,7 @@ class _LogInState extends State<LogIn> {
                                     return null;
                                   },
                                   onChanged: (value) {
-                                    email = value;
+                                    email = value.trim();
                                   },
                                   //  controller: _emailController,
                                   keyboardType: TextInputType.emailAddress,
@@ -138,7 +114,7 @@ class _LogInState extends State<LogIn> {
                                     return null;
                                   },
                                   onChanged: (value) {
-                                    password = value;
+                                    password = value.trim();
                                   },
                                   obscureText: passwordVisible,
                                   decoration: textFormDecoration.copyWith(
@@ -170,7 +146,9 @@ class _LogInState extends State<LogIn> {
                         Padding(
                           padding: const EdgeInsets.all(15),
                           child: processing == true
-                              ? Center(child: CircularProgressIndicator(color: Colors.white))
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                      color: Colors.white))
                               : AuthButton(
                                   label: 'Log in',
                                   onPressed: () {
@@ -192,8 +170,7 @@ class _LogInState extends State<LogIn> {
                               ),
                               TextButton(
                                   onPressed: () {
-                                    Navigator.pushReplacementNamed(
-                                        context, '/sign_up');
+                                    Get.toNamed('/sign_up');
                                   },
                                   child: const Text(
                                     'Register here',

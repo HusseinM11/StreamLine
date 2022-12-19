@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:streamline/constants/colors.dart';
 import 'package:streamline/widgets/auth_widgets.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:streamline/widgets/snackbar.dart';
 
-
+import '../constants/firebase_constants.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -31,40 +29,22 @@ class _SignUpState extends State<SignUp> {
       processing = true;
     });
     if (_formKey.currentState!.validate()) {
-      try {
-        await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
-        CollectionReference users =
-            FirebaseFirestore.instance.collection('users');
+      authController.register(email: email, password: password, name: name);
 
-        _uid = FirebaseAuth.instance.currentUser!.uid;
-
-        await users
-            .doc(_uid)
-            .set({'name': name, 'email': email, 'uid': _uid});
+      if (authController.user != null) {
         _formKey.currentState!.reset();
-
-        Navigator.pushReplacementNamed(context, '/log_in');
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
-          setState(() {
-            processing = false;
-          });
-          MyMessageHandler.showSnackBar(
-              _scaffoldKey, 'The password provided is too weak.');
-        } else if (e.code == 'email-already-in-use') {
-          setState(() {
-            processing = false;
-          });
-          MyMessageHandler.showSnackBar(
-              _scaffoldKey, 'The account already exists for that email.');
-        }
       }
+      setState(() {
+        processing = false;
+      });
     } else {
       setState(() {
         processing = false;
       });
-      MyMessageHandler.showSnackBar(_scaffoldKey, 'please fill all fields');
+      Get.snackbar('Error', 'Please fill all fields,',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.darkGrey.withOpacity(0.7),
+          colorText: Colors.white);
     }
   }
 
@@ -113,7 +93,7 @@ class _SignUpState extends State<SignUp> {
                                   return null;
                                 },
                                 onChanged: (value) {
-                                  name = value;
+                                  name = value.trim();
                                 },
                                 decoration: textFormDecoration.copyWith(
                                   labelText: 'Name',
@@ -138,7 +118,7 @@ class _SignUpState extends State<SignUp> {
                                   return null;
                                 },
                                 onChanged: (value) {
-                                  email = value;
+                                  email = value.trim();
                                 },
                                 //  controller: _emailController,
                                 keyboardType: TextInputType.emailAddress,
@@ -163,7 +143,7 @@ class _SignUpState extends State<SignUp> {
                                   return null;
                                 },
                                 onChanged: (value) {
-                                  password = value;
+                                  password = value.trim();
                                 },
                                 obscureText: passwordVisible,
                                 decoration: textFormDecoration.copyWith(
@@ -194,7 +174,9 @@ class _SignUpState extends State<SignUp> {
                       Padding(
                         padding: const EdgeInsets.all(15),
                         child: processing == true
-                            ? const Center(child: CircularProgressIndicator(color: Colors.white))
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                    color: Colors.white))
                             : AuthButton(
                                 label: 'Submit',
                                 onPressed: () {
@@ -216,8 +198,7 @@ class _SignUpState extends State<SignUp> {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  Navigator.pushReplacementNamed(
-                                      context, '/log_in');
+                                  Get.toNamed('/log_in');
                                 },
                                 child: const Text(
                                   'Login here',

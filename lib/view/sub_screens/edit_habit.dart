@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -10,36 +8,33 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:streamline/model/habit.dart';
 
-import 'package:streamline/main_screens/habits.dart';
+import 'package:streamline/view/main_screens/habits.dart';
 
-import '../controller/habits_controller.dart';
-import '../constants/colors.dart';
-import '../widgets/snackbar.dart';
+import '../../constants/colors.dart';
+import '../../controller/habits_controller.dart';
+import '../../widgets/buttons.dart';
+import '../../widgets/snackbar.dart';
 
-class NewHabitScreen extends StatefulWidget {
-  // List<Habit> habitsList = [];
-  NewHabitScreen({
-    super.key,
-  });
+class EditHabitScreen extends StatefulWidget {
+  final int index;
+  final scaffoldkey;
+  EditHabitScreen({super.key, required this.index, required this.scaffoldkey});
 
   @override
-  State<NewHabitScreen> createState() => _NewHabitScreenState();
+  State<EditHabitScreen> createState() => _NewHabitScreenState();
 }
 
-class _NewHabitScreenState extends State<NewHabitScreen> {
-  late String title;
-  String? description;
-  int repeat = 1;
-  IconData _icon = Icons.check_circle_rounded;
+class _NewHabitScreenState extends State<EditHabitScreen> {
   final habitsController = Get.put(HabitsController());
-
+  IconData _icon = Icons.check_circle_rounded;
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
 
-  final CollectionReference users =
-      FirebaseFirestore.instance.collection('users');
-
-  final String _uid = FirebaseAuth.instance.currentUser!.uid;
+  @override
+  void initState() {
+    super.initState();
+    _icon = habitsController.habits[widget.index].icon;
+  }
 
   _pickIcon() async {
     IconData? icon =
@@ -51,41 +46,25 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
     setState(() {});
   }
 
-  /* void saveHabit() {
-    users.doc(_uid).collection('habits').add({
-      'habitname': title,
-      'description': description,
-      'repeatdaily': repeat,
-      'iscompleted': false,
-      'icon': _icon.codePoint,
-      'completedcount': 0,
-      'timeadded': Timestamp.now()
-    });
-    habitsController.update();
-    print(users.doc(_uid));
-    print(_icon);
-
-    /* habitsController.addHabit(Habit(
-        habitName: title,
-        repeatDaily: repeat,
-        isCompleted: false,
-        icon: _icon,
-        completedCount: 0,
-        description: description,
-        timeAdded: DateTime.now()));
- */
-    Navigator.pop(context);
-  } */
+  late int repeat = habitsController.habits[widget.index].repeatDaily;
 
   @override
   Widget build(BuildContext context) {
+    String habitName = habitsController.habits[widget.index].habitName;
+    String? description = habitsController.habits[widget.index].description;
+    TextEditingController titleController =
+        TextEditingController(text: habitName);
+    TextEditingController descController =
+        TextEditingController(text: description);
+    //_icon = habitsController.habits[widget.index].icon;
+    int repeatDaily = habitsController.habits[widget.index].repeatDaily;
     return ScaffoldMessenger(
       key: _scaffoldKey,
       child: Scaffold(
           backgroundColor: AppColors.bg2,
           appBar: AppBar(
               backgroundColor: Colors.transparent,
-              title: const Text('New habit',
+              title: const Text('Edit habit',
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
@@ -93,7 +72,7 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
               elevation: 0,
               leading: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Get.back();
                   },
                   icon: const Icon(FontAwesomeIcons.angleLeft,
                       color: AppColors.darkGrey))),
@@ -160,6 +139,7 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                             style: TextStyle(
                                 fontSize: 26, fontWeight: FontWeight.w300)),
                         TextFormField(
+                          controller: titleController,
                           maxLines: 1,
                           maxLength: 22,
                           style: const TextStyle(
@@ -188,7 +168,7 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                             return null;
                           },
                           onChanged: (value) {
-                            title = value;
+                            habitName = value;
                           },
                         ),
                         const SizedBox(height: 15),
@@ -196,6 +176,7 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                             style: TextStyle(
                                 fontSize: 26, fontWeight: FontWeight.w300)),
                         TextFormField(
+                          controller: descController,
                           maxLines: 2,
                           maxLength: 100,
                           style: const TextStyle(
@@ -223,101 +204,134 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                         ),
                         const SizedBox(height: 20),
                         const SizedBox(height: 40),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                                height: 30,
-                                width: 30,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.red[400],
-                                ),
-                                child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () {
-                                      setState(() {
-                                        if (repeat == 1) {
-                                          MyMessageHandler.showSnackBar(
-                                              _scaffoldKey,
-                                              'Cannot decrease less than 1.');
-                                        } else if (repeat >= 1) {
-                                          repeat--;
-                                        }
-                                      });
-                                    },
-                                    icon: const Icon(FeatherIcons.minus,
-                                        color: Colors.white, size: 20))),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 17.0),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    '$repeat',
-                                    style: const TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  const Text(
-                                    'Time a day',
-                                    style: TextStyle(
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                                height: 30,
-                                width: 30,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.green[400],
-                                ),
-                                child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () {
-                                      setState(() {
-                                        repeat++;
-                                      });
-                                    },
-                                    icon: const Icon(FeatherIcons.plus,
-                                        color: Colors.white, size: 20))),
-                          ],
+                        RepeatSetter(
+                          repeat: repeat,
+                          scaffoldKey: _scaffoldKey,
+                          callback: (p0) {
+                          
+                              repeat = p0;
+                            
+                          },
                         ),
                         const SizedBox(height: 75),
                         Align(
-                          child: TextButton(
-                              style: TextButton.styleFrom(
-                                  backgroundColor: AppColors.orange2,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30))),
+                          child: RoundedTextButton(
+                              label: 'Save Changes',
                               onPressed: () {
-                                HabitsController().addHabit(
-                                    habitName: title,
+                                //editHabit(title, description, repeat, _icon);
+                                habitsController.updateHabit(
+                                    habitName: habitName,
                                     description: description,
-                                    repeat: repeat,
-                                    completedCount: 0,
-                                    isCompleted: false,
+                                    habitId: habitsController
+                                        .habits[widget.index].habitId,
                                     icon: _icon,
-                                    timeAdded: Timestamp.now(),);
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 50.0, vertical: 5),
-                                child: Text('Save habit',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 30)),
-                              )),
+                                    repeat: repeat,
+                                    uid: habitsController.uid);
+                              }),
                         ),
                       ],
                     ),
                   )),
+              Align(
+                alignment: AlignmentDirectional.bottomEnd,
+                child: Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: FloatingActionButton(
+                      backgroundColor: Colors.red,
+                      onPressed: () {
+                        habitsController.deleteHabit(habitsController.uid,
+                            habitsController.habits[widget.index].habitId);
+                        Get.back();
+                      },
+                      elevation: 0,
+                      child: Icon(FontAwesomeIcons.trash, size: 25)),
+                ),
+              )
             ],
           )),
+    );
+  }
+}
+
+class RepeatSetter extends StatefulWidget {
+  final Function(int) callback;
+  RepeatSetter({
+    Key? key,
+    required this.callback,
+    required this.repeat,
+    required GlobalKey<ScaffoldMessengerState> scaffoldKey,
+  })  : _scaffoldKey = scaffoldKey,
+        super(key: key);
+
+  int repeat;
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey;
+
+  @override
+  State<RepeatSetter> createState() => _RepeatSetterState();
+}
+
+class _RepeatSetterState extends State<RepeatSetter> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+            height: 30,
+            width: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.red[400],
+            ),
+            child: IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  if (widget.repeat == 1) {
+                    MyMessageHandler.showSnackBar(
+                        widget._scaffoldKey, 'Cannot decrease less than 1.');
+                  } else if (widget.repeat >= 1) {
+                    setState(() {
+                    widget.repeat--;
+                    widget.callback(widget.repeat);
+                  });
+                  }
+                },
+                icon: const Icon(FeatherIcons.minus,
+                    color: Colors.white, size: 20))),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 17.0),
+          child: Column(
+            children: [
+              Text(
+                widget.repeat.toString(),
+                style:
+                    const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+              ),
+              const Text(
+                'Time a day',
+                style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        ),
+        Container(
+            height: 30,
+            width: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.green[400],
+            ),
+            child: IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  setState(() {
+                    widget.repeat++;
+                    widget.callback(widget.repeat);
+                  });
+                },
+                icon: const Icon(FeatherIcons.plus,
+                    color: Colors.white, size: 20))),
+      ],
     );
   }
 }

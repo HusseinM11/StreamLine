@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:streamline/main_screens/settings.dart';
+import 'package:streamline/view/main_screens/settings.dart';
 
 import 'habits.dart';
 import 'home.dart';

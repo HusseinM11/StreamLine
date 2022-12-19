@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:streamline/main_screens/home_content.dart';
-import 'package:streamline/main_screens/progress.dart';
-import 'package:streamline/main_screens/settings.dart';
+import 'package:streamline/view/main_screens/home_content.dart';
+import 'package:streamline/view/main_screens/progress.dart';
+import 'package:streamline/view/main_screens/settings.dart';
 
 import 'habits.dart';
 
@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   List<Widget> _tabs = [
-    HomeContentScreen(documentId: FirebaseAuth.instance.currentUser!.uid),
+    HomeContentScreen(),
      HabitsScreen(),
     const ProgressScreen(),
     const SettingsScreen(),

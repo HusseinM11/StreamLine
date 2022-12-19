@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:streamline/main_screens/progress.dart';
+import 'package:streamline/view/main_screens/progress.dart';
 
-import '../constants/colors.dart';
+import '../../constants/colors.dart';
+import '../../constants/firebase_constants.dart';
 import 'habits.dart';
 import 'home.dart';
 
@@ -56,7 +57,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SettingsTiles(
                 label: 'Log Out',
                 icon: FontAwesomeIcons.user,
-                onPressed: () {},
+                onPressed: () {
+                  authController.signOut();
+                },
               ),
               const LightGreyDivider(),
               

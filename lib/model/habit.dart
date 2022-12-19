@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class HabitModel {
+ final String habitId;
   String habitName;
   String? description;
   final Timestamp timeAdded;
@@ -12,6 +13,7 @@ class HabitModel {
   int completedCount = 0;
 
   HabitModel({
+    required this.habitId,
     required this.habitName,
     this.description,
     required this.timeAdded,
@@ -34,12 +36,14 @@ class HabitModel {
     };
   }
 
-  HabitModel.fromMap(Map<String, dynamic> habitsList)
-      : habitName = habitsList['habitname'],
-        description = habitsList['description'],
-        timeAdded = habitsList['timeadded'],
-        timeCompleted = habitsList['timecompleted'],
-        repeatDaily = habitsList['repeatdaily'],
-        icon =  IconData(habitsList['icon'], fontFamily: 'MaterialIcons'),
-        isCompleted = habitsList['iscompleted'];
+  HabitModel.fromDocumentSnapshot(DocumentSnapshot doc)
+      : habitName = doc['habitname'],
+        habitId = doc.id,
+        description = doc['description'],
+        timeAdded = doc['timeadded'],
+        timeCompleted = doc.data().toString().contains('timecompleted') ? doc['timecompleted'] : Timestamp.now(),
+        repeatDaily = doc['repeatdaily'],
+        icon = IconData(doc['icon'], fontFamily: 'MaterialIcons'),
+        completedCount = doc['completedcount'],
+        isCompleted = doc['iscompleted'];
 }
