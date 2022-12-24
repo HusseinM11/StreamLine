@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:streamline/model/task.dart';
 
-class ActivityModel {
+class ActivityModel implements Task {
   final String actvId;
   String content;
   int timeGoal;
@@ -8,9 +9,11 @@ class ActivityModel {
   bool started;
   bool isCompleted;
   Timestamp timeAdded;
+  Timestamp? timeCompleted;
 
   ActivityModel(
       {required this.actvId,
+       this.timeCompleted,
       required this.content,
       required this.timeGoal,
       required this.started,
@@ -21,10 +24,12 @@ class ActivityModel {
       : content = doc['content'],
         timeAdded = doc['timeadded'],
         actvId = doc.id,
-        timeGoal = doc['timegoal'],
-        timeSpent = doc.data().toString().contains('timespent')
-            ? doc['timespent']
-            : 0,
-        started = doc['started'],
+        timeGoal = doc.data().toString().contains('timegoal') ? doc['timegoal'] : 20 ,
+        timeCompleted = doc.data().toString().contains('timecompleted')
+            ? doc['timecompleted']
+            : Timestamp.now(),
+        timeSpent =
+            doc.data().toString().contains('timespent') ? doc['timespent'] : 0,
+        started = doc.data().toString().contains('started') ? doc['started'] : false,
         isCompleted = doc['iscompleted'];
 }

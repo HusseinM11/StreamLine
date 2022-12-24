@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:streamline/widgets/elevated_button.dart';
 
 extension StringExtension on String {
   String capitalize() {
@@ -10,15 +11,13 @@ extension StringExtension on String {
 
 class PlusButton extends StatelessWidget {
   Function() onPressed;
-   PlusButton({
-    Key? key, required this.onPressed
-  }) : super(key: key);
+  PlusButton({Key? key, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFFF6E50), elevation: 0),
+    return MyElevatedButton(
+      borderRadius: BorderRadius.circular(5),
+      gradient: LinearGradient(colors: [Color(0xFFE65C00), Color(0xFFF9D423)]),
       onPressed: onPressed,
       child: const Icon(FeatherIcons.plus, size: 20),
     );

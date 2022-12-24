@@ -1,14 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:streamline/constants/colors.dart';
-import 'package:streamline/view/main_screens/welcome_screen.dart';
-import 'package:streamline/widgets/snackbar.dart';
+
 
 import '../constants/firebase_constants.dart';
 import '../model/user.dart';
-import '../view/main_screens/affirmations.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
@@ -19,6 +17,7 @@ class AuthController extends GetxController {
   @override
   onInit() async {
     super.onInit();
+    
     _firebaseUser.bindStream(auth.authStateChanges());
   }
 

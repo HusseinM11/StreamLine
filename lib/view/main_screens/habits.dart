@@ -55,11 +55,22 @@ class HabitsScreen extends StatelessWidget {
                       onLongPress: () {
                         if (controller.habits[index].completedCount ==
                             controller.habits[index].repeatDaily) {
-                          MyMessageHandler.showSnackBar(_scaffoldKey, 'You\'ve already finished this habit for the day!');
+                          MyMessageHandler.showSnackBar(_scaffoldKey,
+                              'You\'ve already finished this habit for the day!');
                         } else {
                           controller.completeHabit(
                               habitId: controller.habits[index].habitId,
-                              uid: controller.uid, completedCount: controller.habits[index].completedCount, repeat: controller.habits[index].repeatDaily);
+                              uid: controller.uid,
+                              completedCount:
+                                  controller.habits[index].completedCount,
+                              repeat: controller.habits[index].repeatDaily);
+                          if (controller.habits[index].repeatDaily -
+                              controller.habits[index].completedCount == 1) {
+                            controller.addHabitToHistory(
+                                content: controller.habits[index].content,
+                                repeat: controller.habits[index].repeatDaily,
+                                timeAdded: controller.habits[index].timeAdded);
+                          }
                         }
                       },
                       onDoubleTap: () {
@@ -76,7 +87,7 @@ class HabitsScreen extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.all(10.0),
               child: FloatingActionButton(
-                  backgroundColor: AppColors.orange,
+                  backgroundColor: AppColors.orange2,
                   onPressed: () {
                     habitsController.habits.length == 6
                         ? MyMessageHandler.showSnackBar(_scaffoldKey,

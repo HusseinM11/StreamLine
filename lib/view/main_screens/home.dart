@@ -5,6 +5,7 @@ import 'package:streamline/view/main_screens/home_content.dart';
 import 'package:streamline/view/main_screens/progress.dart';
 import 'package:streamline/view/main_screens/settings.dart';
 
+import '../../constants/colors.dart';
 import 'habits.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> _tabs = [
     HomeContentScreen(),
-     HabitsScreen(),
+    HabitsScreen(),
     const ProgressScreen(),
     const SettingsScreen(),
   ];
@@ -28,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: _tabs[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: _selectedIndex == 1 ? AppColors.bg2 : _selectedIndex == 2 ? AppColors.bg2 : Colors.white,
         elevation: 0,
         unselectedItemColor: const Color(0xFF312B26).withOpacity(0.6),
         selectedItemColor: const Color(0xFFFF6E50),

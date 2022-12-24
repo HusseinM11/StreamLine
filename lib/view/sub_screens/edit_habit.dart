@@ -50,10 +50,10 @@ class _NewHabitScreenState extends State<EditHabitScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String habitName = habitsController.habits[widget.index].habitName;
+    String content = habitsController.habits[widget.index].content;
     String? description = habitsController.habits[widget.index].description;
     TextEditingController titleController =
-        TextEditingController(text: habitName);
+        TextEditingController(text: content);
     TextEditingController descController =
         TextEditingController(text: description);
     //_icon = habitsController.habits[widget.index].icon;
@@ -168,7 +168,7 @@ class _NewHabitScreenState extends State<EditHabitScreen> {
                             return null;
                           },
                           onChanged: (value) {
-                            habitName = value;
+                            content = value;
                           },
                         ),
                         const SizedBox(height: 15),
@@ -220,7 +220,7 @@ class _NewHabitScreenState extends State<EditHabitScreen> {
                               onPressed: () {
                                 //editHabit(title, description, repeat, _icon);
                                 habitsController.updateHabit(
-                                    habitName: habitName,
+                                    content: content,
                                     description: description,
                                     habitId: habitsController
                                         .habits[widget.index].habitId,
@@ -237,7 +237,7 @@ class _NewHabitScreenState extends State<EditHabitScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(30.0),
                   child: FloatingActionButton(
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.orange,
                       onPressed: () {
                         habitsController.deleteHabit(habitsController.uid,
                             habitsController.habits[widget.index].habitId);

@@ -25,10 +25,10 @@ class HabitCircle extends StatelessWidget {
                 constraints: const BoxConstraints.expand(),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: habit.isCompleted ? AppColors.orange : Colors.transparent,
+                    color: habit.isCompleted ? AppColors.orange2 : Colors.transparent,
                     border: Border.all(
                         color:
-                            !habit.isCompleted ? AppColors.orange : Colors.transparent,
+                            !habit.isCompleted ? AppColors.orange2 : Colors.transparent,
                         width: 7)),
                 child: SingleChildScrollView(
                   physics: const NeverScrollableScrollPhysics(),
@@ -60,7 +60,7 @@ class HabitCircle extends StatelessWidget {
                 )),
           ),
           const SizedBox(height: 5),
-          Text(habit.habitName,
+          Text(habit.content,
               textAlign: TextAlign.center,
               style: const TextStyle(
                   color: AppColors.darkGrey,

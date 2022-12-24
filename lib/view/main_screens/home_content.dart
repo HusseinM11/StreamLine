@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart' hide GetStringUtils;
 import 'package:intl/intl.dart';
+import 'package:streamline/constants/colors.dart';
+import 'package:streamline/controller/all_tasksController.dart';
+import 'package:streamline/controller/habits_controller.dart';
 import 'package:streamline/widgets/dialog_box.dart';
 import 'package:streamline/widgets/home_widgets.dart';
 
-import '../../constants/colors.dart';
 import '../../constants/firebase_constants.dart';
 import '../../controller/activity_controller.dart';
 import '../../controller/auth_controller.dart';
@@ -19,75 +21,96 @@ import '../../widgets/add_activity.dart';
 import '../../widgets/edit_activity.dart';
 import '../../widgets/todo_tile.dart';
 
-class HomeContentScreen extends StatefulWidget {
-  const HomeContentScreen({super.key});
+class HomeContentScreen extends StatelessWidget {
+  HomeContentScreen({super.key});
 
-  @override
-  State<HomeContentScreen> createState() => _HomeContentScreenState();
-}
-
-class _HomeContentScreenState extends State<HomeContentScreen> {
   String date = DateFormat("MMMM, dd, yyyy").format(DateTime.now());
-  String name = 'elya';
+
   final _controller = TextEditingController();
 
-  List habitList = [
-    // habtName - timeSpent secs - timeGoal mins - habitStarted
-    ['Study', 0, 1, false],
-    ['Work', 0, 60, false],
-    ['Meditate', 0, 60, false],
-  ];
-
   void startActivity(int index) {
+    debugPrint('started');
+    ActivitiesController controller = Get.find<ActivitiesController>();
     // start time
     var startTime = DateTime.now();
 
     // include the time thats elapes
-    int elapsedTime = habitList[index][1];
+    int elapsedTime = controller.activities[index].timeSpent;
 
     //habit started or stopped
-    setState(() {
+    controller.activities[index].started =
+        !controller.activities[index].started;
+    /*  setState(() {
       habitList[index][3] = !habitList[index][3];
-    });
+    }); */
     // check if habit started or stopped
-    if (habitList[index][3]) {
-      Timer.periodic(const Duration(milliseconds: 100), (timer) {
-        setState(() {
-          // cancel if habit stopped
-          if (!habitList[index][3]) {
-            timer.cancel();
-          }
 
-          var currentTime = DateTime.now();
-          habitList[index][1] = elapsedTime +
-              currentTime.second -
-              startTime.second +
-              60 * (currentTime.minute - startTime.minute) +
-              60 * 60 * (currentTime.hour - startTime.hour);
-        });
+    if (controller.activities[index].started &&
+        !controller.activities[index].isCompleted) {
+      Timer.periodic(const Duration(milliseconds: 100), (timer) {
+        // cancel if habit stopped
+        if (!controller.activities[index].started) {
+          timer.cancel();
+        }
+
+        var currentTime = DateTime.now();
+        controller.activities[index].timeSpent = elapsedTime +
+            currentTime.second -
+            startTime.second +
+            60 * (currentTime.minute - startTime.minute) +
+            60 * 60 * (currentTime.hour - startTime.hour);
+
+        if ((controller.activities[index].timeSpent * 1000) ==
+            (controller.activities[index].timeGoal * 60 * 1000)) {
+          controller.activities[index].isCompleted = true;
+          controller.activities[index].started = false;
+          print('if clause ran');
+          controller.saveActivity(
+              uid: controller.uid,
+              actvId: controller.activities[index].actvId,
+              timeSpent: controller.activities[index].timeSpent,
+              started: controller.activities[index].started,
+              isCompleted: controller.activities[index].isCompleted,
+              timeCompleted: Timestamp.now());
+
+          controller.addActivityToHistory(
+              content: controller.activities[index].content,
+              timeAdded: controller.activities[index].timeAdded);
+              timer.cancel();
+        } else {
+          controller.saveActivity(
+            uid: controller.uid,
+            actvId: controller.activities[index].actvId,
+            timeSpent: controller.activities[index].timeSpent,
+            started: controller.activities[index].started,
+            isCompleted: controller.activities[index].isCompleted,
+          );
+        }
       });
     }
   }
 
-  void addActivity() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return EditActivityDialog(index: 1);
-        });
-  }
-
-  void editActivity(int index) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return //EditActivityDialog(index: index,);
-              AddActivityDialog();
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
+    void addActivity() {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AddActivityDialog();
+          });
+    }
+
+    void editActivity(int index) {
+      debugPrint('pressed');
+      showDialog(
+          context: context,
+          builder: (context) {
+            return EditActivityDialog(
+              index: index,
+            );
+          });
+    }
+
     return Scaffold(
         backgroundColor: const Color(0xFFFDEAC1),
         body: SingleChildScrollView(
@@ -95,7 +118,14 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
             children: [
               Container(
                   height: MediaQuery.of(context).size.height * 0.35,
-                  color: const Color(0xFFFDEAC1),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFDEAC1),
+                    image: DecorationImage(
+                      alignment: Alignment.bottomCenter,
+                      image: AssetImage('images/home/homebg.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20.0, vertical: 10),
@@ -125,11 +155,11 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
                             builder: (_) {
                               if (_.user.name != null) {
                                 return Text(_.user.name!.capitalize(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 40,
                                         fontWeight: FontWeight.w600));
                               } else {
-                                return Text("loading...");
+                                return const Text("loading...");
                               }
                             },
                           ),
@@ -138,18 +168,35 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
                       const SizedBox(height: 35),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          DailyStatsTab(
-                            label: 'Activites Done',
-                            completed: 2,
+                        children: [
+                          GetX<ActivitiesController>(
+                            initState: (_) async {
+                              Get.find<ActivitiesController>();
+                            },
+                            builder: (controller) {
+                              return DailyStatsTab(
+                                label: 'Activites Done',
+                                completed: controller
+                                    .numberOfCompletedActivitiesToday(),
+                              );
+                            },
                           ),
                           DailyStatsTab(
                             label: 'Habits Done',
-                            completed: 2,
+                            completed: Get.find<HabitsController>()
+                                .numberOfCompletedHabitsToday(),
                           ),
-                          DailyStatsTab(
-                            label: 'To do\'s Done',
-                            completed: 2,
+                          GetX<TodosController>(
+                            initState: (_) async {
+                              Get.find<TodosController>();
+                            },
+                            builder: (controller) {
+                              return DailyStatsTab(
+                                label: 'To do\'s Done',
+                                completed:
+                                    controller.numberOfCompletedTodosToday(),
+                              );
+                            },
                           ),
                         ],
                       )
@@ -175,7 +222,7 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0, vertical: 40),
+                        horizontal: 20.0, vertical: 40),
                     child: Column(
                       children: [
                         Row(
@@ -192,34 +239,45 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
                                 )),
                           ],
                         ),
-                        SizedBox(height: 15),
-                        Container(
-                          height: 150,
-                          child: GetX<ActivitiesController>(
-                            initState: (_) async {
-                              Get.find<ActivitiesController>();
-                            },
-                            builder: (controller) {
-                              return ListView.builder(
-                                itemCount: controller.activities.length,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: ((context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      print('pressed');
-                                      EditActivityDialog(index: index);
-                                    },
-                                    child: ActivityTile(
-                                      onPressed: () {
-                                        startActivity(index);
-                                      },
-                                      activity: controller.activities[index],
+                        const SizedBox(height: 15),
+                        GetX<ActivitiesController>(
+                          initState: (_) async {
+                            Get.find<ActivitiesController>();
+                          },
+                          builder: (controller) {
+                            return Container(
+                              height: 165,
+                              child: controller.activities.isEmpty
+                                  ? Center(
+                                      child: Text(
+                                          'Add Your Daily Activities Here!',
+                                          style: TextStyle(
+                                              fontSize: 23,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.orange2)),
+                                    )
+                                  : ListView.builder(
+                                      itemCount: controller.activities.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: ((context, index) {
+                                        return ActivityTile(
+                                          onPlay: () {
+                                            startActivity(index);
+                                          },
+                                          activity:
+                                              controller.activities[index],
+                                          onDoubleTap: () =>
+                                              editActivity(index),
+                                          onDone: () =>
+                                              controller.restartActivity(
+                                                  actvId: controller
+                                                      .activities[index].actvId,
+                                                  uid: controller.uid),
+                                        );
+                                      }),
                                     ),
-                                  );
-                                }),
-                              );
-                            },
-                          ),
+                            );
+                          },
                         ),
                         const SizedBox(height: 30),
                         Row(
@@ -251,44 +309,64 @@ class _HomeContentScreenState extends State<HomeContentScreen> {
                             ),
                           ],
                         ),
-                        Container(
-                          constraints: BoxConstraints(minHeight: 300),
-                          //height: MediaQuery.of(context).size.height,
+                        GetX<TodosController>(
+                          initState: (_) async {
+                            Get.find<TodosController>();
+                          },
+                          builder: (controller) {
+                            return Container(
+                              constraints: const BoxConstraints(minHeight: 190),
+                              //height: MediaQuery.of(context).size.height,
 
-                          child: GetX<TodosController>(
-                            initState: (_) async {
-                              Get.find<TodosController>();
-                            },
-                            builder: (controller) {
-                              return ListView.builder(
-                                  shrinkWrap: true,
-                                  padding: const EdgeInsets.only(top: 10),
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: controller.todos.length,
-                                  itemBuilder: (context, index) {
-                                    return TodoTile(
-                                      todo: controller.todos[index],
-                                      uid: controller.uid,
-                                      onChanged: (value) {
-                                        if (value == true) {
-                                          controller.completeTodo(
-                                              controller.uid,
-                                              controller.todos[index].todoId);
-                                        } else {
-                                          controller.uncompleteTodo(
-                                              controller.uid,
-                                              controller.todos[index].todoId);
-                                        }
-                                      },
-                                      deleteFunction: (BuildContext) {
-                                        todosController.deleteTodo(
-                                            controller.uid,
-                                            controller.todos[index].todoId);
-                                      },
-                                    );
-                                  });
-                            },
-                          ),
+                              child: Get.find<TodosController>().todos.isEmpty
+                                  ? const Center(
+                                      child: Text('Add Your Daily Todos Here!',
+                                          style: TextStyle(
+                                              fontSize: 23,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.orange2)),
+                                    )
+                                  : ListView.builder(
+                                      shrinkWrap: true,
+                                      padding: const EdgeInsets.only(top: 10),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: controller.todos.length,
+                                      itemBuilder: (context, index) {
+                                        return TodoTile(
+                                          todo: controller.todos[index],
+                                          uid: controller.uid,
+                                          onChanged: (value) {
+                                            if (value == true) {
+                                              controller.completeTodo(
+                                                  controller.uid,
+                                                  controller
+                                                      .todos[index].todoId);
+                                              controller.addTodoToHistory(
+                                                  content: controller
+                                                      .todos[index].content,
+                                                  timeAdded: controller
+                                                      .todos[index].timeAdded);
+                                            } else {
+                                              controller.uncompleteTodo(
+                                                  controller.uid,
+                                                  controller
+                                                      .todos[index].todoId);
+                                              controller.deleteTodoFromHistory(
+                                                  controller.uid,
+                                                  controller.todosHistory[index]
+                                                      .todoId);
+                                            }
+                                          },
+                                          deleteFunction: (BuildContext) {
+                                            todosController.deleteTodo(
+                                                controller.uid,
+                                                controller.todos[index].todoId);
+                                          },
+                                        );
+                                      }),
+                            );
+                          },
                         ),
                       ],
                     ),

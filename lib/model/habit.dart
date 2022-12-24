@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:streamline/model/task.dart';
 
-class HabitModel {
+class HabitModel implements Task {
  final String habitId;
-  String habitName;
+  String content;
   String? description;
   final Timestamp timeAdded;
   final Timestamp? timeCompleted;
@@ -14,7 +15,7 @@ class HabitModel {
 
   HabitModel({
     required this.habitId,
-    required this.habitName,
+    required this.content,
     this.description,
     required this.timeAdded,
     this.timeCompleted,
@@ -26,7 +27,7 @@ class HabitModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'habitname': habitName,
+      'content': content,
       'description': description,
       'timeadded': timeAdded,
       'timecompleted': timeCompleted,
@@ -37,13 +38,23 @@ class HabitModel {
   }
 
   HabitModel.fromDocumentSnapshot(DocumentSnapshot doc)
-      : habitName = doc['habitname'],
+      : content = doc['content'],
         habitId = doc.id,
-        description = doc['description'],
+        description = doc.data().toString().contains('description') ? doc['description'] : 'description',
         timeAdded = doc['timeadded'],
         timeCompleted = doc.data().toString().contains('timecompleted') ? doc['timecompleted'] : Timestamp.now(),
         repeatDaily = doc['repeatdaily'],
-        icon = IconData(doc['icon'], fontFamily: 'MaterialIcons'),
+        icon = doc.data().toString().contains('icon') ? IconData(doc['icon'], fontFamily: 'MaterialIcons') : IconData(63029, fontFamily: 'MaterialIcons'),
         completedCount = doc['completedcount'],
         isCompleted = doc['iscompleted'];
+        
+          @override
+          set timeAdded(Timestamp _timeAdded) {
+            
+          }
+        
+          @override
+          set timeCompleted(Timestamp? _timeCompleted) {
+            
+          }
 }

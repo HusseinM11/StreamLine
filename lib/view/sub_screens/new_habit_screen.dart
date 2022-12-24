@@ -271,7 +271,7 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                                       borderRadius: BorderRadius.circular(30))),
                               onPressed: () {
                                 HabitsController().addHabit(
-                                    habitName: title,
+                                    content: title,
                                     description: description,
                                     repeat: repeat,
                                     completedCount: 0,

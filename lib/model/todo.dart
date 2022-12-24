@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:streamline/model/task.dart';
 
-class TodoModel {
+class TodoModel implements Task {
   String content;
   final String todoId;
   bool isCompleted;
@@ -11,7 +12,7 @@ class TodoModel {
       required this.content,
       required this.isCompleted,
       required this.timeAdded,
-      required this.timeCompleted});
+       this.timeCompleted});
 
   TodoModel.fromDocumentSnapshot(DocumentSnapshot doc)
       : todoId = doc.id,
@@ -19,4 +20,14 @@ class TodoModel {
         timeAdded = doc["timeadded"],
         timeCompleted = doc.data().toString().contains('timecompleted') ? doc['timecompleted'] : Timestamp.now(),
         isCompleted = doc["iscompleted"];
+        
+          @override
+          set timeAdded(Timestamp _timeAdded) {
+            
+          }
+        
+          @override
+          set timeCompleted(Timestamp? _timeCompleted) {
+            
+          }
 }

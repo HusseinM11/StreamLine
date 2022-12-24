@@ -15,12 +15,14 @@ class HabitsController extends GetxController {
   //var habits = <HabitModel>[].obs;
 
   RxList<HabitModel> habits = RxList([]);
-  final String _uid = authController.user.uid;
+  RxList<HabitModel> habitsHistory = RxList([]);
+  final String _uid = authController.user.uid!;
   final _firestore = FirebaseFirestore.instance;
   @override
   void onInit() {
     super.onInit();
     habits.bindStream(habitStream(_uid));
+    habitsHistory.bindStream(habitHistoryStream(_uid));
   }
 
   String get uid {
@@ -42,28 +44,29 @@ class HabitsController extends GetxController {
   }
 
   Future<void> completeHabit(
-      {required String uid, required String habitId, required int repeat, required completedCount}) async {
+      {required String uid,
+      required String habitId,
+      required int repeat,
+      required completedCount}) async {
     try {
-      
-      _firestore
+     await _firestore
           .collection("users")
           .doc(uid)
           .collection('habits')
           .doc(habitId)
-          .update({
-        'iscompleted': true,
-        'completedcount': FieldValue.increment(1)
-      });
-      if(repeat - completedCount == 1) {
-        _firestore
-          .collection("users")
-          .doc(uid)
-          .collection('habits')
-          .doc(habitId)
-          .update({
-        'timecompleted' : Timestamp.now(),
-      });
+          .update(
+              {'iscompleted': true, 'completedcount': FieldValue.increment(1)});
+      if (repeat - completedCount == 1) {
+      await  _firestore
+            .collection("users")
+            .doc(uid)
+            .collection('habits')
+            .doc(habitId)
+            .update({
+          'timecompleted': Timestamp.now(),
+        });
       }
+      
     } catch (e) {
       print(e);
       rethrow;
@@ -71,7 +74,7 @@ class HabitsController extends GetxController {
   }
 
   Future<void> updateHabit({
-    required String habitName,
+    required String content,
     required String? description,
     required int repeat,
     required IconData icon,
@@ -85,7 +88,7 @@ class HabitsController extends GetxController {
           .collection("habits")
           .doc(habitId)
           .update({
-        'habitname': habitName,
+        'content': content,
         'description': description,
         'repeatdaily': repeat,
         'icon': icon.codePoint,
@@ -116,7 +119,7 @@ class HabitsController extends GetxController {
   }
 
   Future<void> addHabit(
-      {required String habitName,
+      {required String content,
       required String? description,
       required int repeat,
       required bool isCompleted,
@@ -125,7 +128,7 @@ class HabitsController extends GetxController {
       required Timestamp timeAdded}) async {
     try {
       await _firestore.collection("users").doc(_uid).collection("habits").add({
-        'habitname': habitName,
+        'content': content,
         'description': description,
         'repeatdaily': repeat,
         'iscompleted': isCompleted,
@@ -140,9 +143,46 @@ class HabitsController extends GetxController {
     }
   }
 
+  Future<void> addHabitToHistory(
+      {required String content,
+      required int repeat,
+      required Timestamp timeAdded}) async {
+    try {
+      await _firestore.collection("users").doc(_uid).collection("habitshistory").add({
+        'content': content,
+        'repeatdaily': repeat,
+        'iscompleted': true,
+        'completedcount': repeat,
+        'timeadded': timeAdded,
+        'timecompleted': Timestamp.now()
+      });
+      
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Stream<List<HabitModel>> habitHistoryStream(String uid) {
+    return _firestore
+        .collection("users")
+        .doc(_uid)
+        .collection("habitshistory")
+        .orderBy("timeadded", descending: false)
+        .snapshots()
+        .map((QuerySnapshot query) {
+      // List<HabitModel> retVal = [];
+
+      List<HabitModel> retVal = [];
+      query.docs.forEach((element) {
+        retVal.add(HabitModel.fromDocumentSnapshot(element));
+      });
+      return retVal;
+    });
+  }
+
   Future<void> resetHabits() async {
     try {
-      
       await _firestore.collection("users").get().then((QuerySnapshot query) {
         query.docs.forEach((doc) {
           _firestore
@@ -152,7 +192,9 @@ class HabitsController extends GetxController {
               .get()
               .then((QuerySnapshot query) {
             query.docs.forEach((habitDoc) {
-              _firestore.collection('users').doc(doc.id)
+              _firestore
+                  .collection('users')
+                  .doc(doc.id)
                   .collection('habits')
                   .doc(habitDoc.id)
                   .update({'iscompleted': false, 'completedcount': 0});
@@ -165,8 +207,26 @@ class HabitsController extends GetxController {
       rethrow;
     }
   }
+
+  int numberOfCompletedHabitsToday() {
+    int count = 0;
+    for (var element in habits) {
+      if (element.isCompleted == true) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  int getCompletedHabits(DateTime day) {
+  int count = 0;
+  for (var element in habits.where((task) => task.isCompleted)) {
+    if (element.timeCompleted!.toDate().day == day.day) {
+      count++;
+    }
+  }
+  return count;
 }
 
-// .update({'iscompleted' : false, 'completedcount' : 0});
+}
 
-//00 00 1-31 1-12 *

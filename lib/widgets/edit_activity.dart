@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 
 import '../constants/colors.dart';
@@ -31,7 +32,7 @@ class EditActivityDialog extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Add New Activity:',
+                const Text('Edit Activity:',
                     style: TextStyle(
                         fontSize: 22,
                         color: Color(0xFFFF6E50),
@@ -40,7 +41,7 @@ class EditActivityDialog extends StatelessWidget {
                 TextField(
                   controller: _activityNameController,
                   style: whiteTextStyle,
-                  maxLength: 16,
+                  maxLength: 12,
                   decoration: InputDecoration(
                     hintText: activitiesController.activities[index].content,
                     hintStyle:
@@ -145,8 +146,24 @@ class EditActivityDialog extends StatelessWidget {
                   ],
                 )),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Container(
+                  decoration: 
+                  
+                  BoxDecoration(shape: BoxShape.circle, color: AppColors.orange,),
+                  
+                  child: IconButton(
+                      padding: EdgeInsets.all(6),
+                      constraints: BoxConstraints(),
+                      onPressed: () => activitiesController.deleteActivity(
+                          uid: activitiesController.uid,
+                          actvId:
+                              activitiesController.activities[index].actvId),
+                      icon: Icon(FeatherIcons.trash,
+                          color: Colors.white, size: 20)),
+                ),
+                SizedBox(width:10),
                 MaterialButton(
                   elevation: 0,
                   onPressed: () {
@@ -155,7 +172,6 @@ class EditActivityDialog extends StatelessWidget {
                         uid: activitiesController.uid,
                         actvId: activitiesController.activities[index].actvId,
                         timeGoal: _wheelMinuteController.selectedItem);
-                    Get.back();
                   },
                   child: Text(
                     'Save',

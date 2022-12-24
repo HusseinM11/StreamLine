@@ -12,8 +12,7 @@ class Root extends GetWidget<AuthController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put<UserController>(UserController());
-    Get.put<AuthController>(AuthController());
+   
     return GetX<AuthController>(
       initState: (_) async {
         Get.put<UserController>(UserController());

@@ -21,7 +21,7 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  
+  Get.put(AuthController());
 
   runApp(const MyApp());
 }
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Barlow',
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/welcome_screen',
+      initialRoute: '/home',
       initialBinding: InitialBinding(),
       home: Root(),
       getPages: [

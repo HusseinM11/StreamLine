@@ -8,8 +8,13 @@ class DialogBox extends StatelessWidget {
   final controller;
   Function() onAdd;
   Function() onCancel;
-   DialogBox({super.key, required this.controller, required this.onCancel, required this.onAdd});
+  DialogBox(
+      {super.key,
+      required this.controller,
+      required this.onCancel,
+      required this.onAdd});
   final todosController = Get.put(TodosController());
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +27,34 @@ class DialogBox extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextField(
-                  controller: controller,
-                  decoration: InputDecoration(
-                      hintText: 'Read new book',
-                      border: UnderlineInputBorder())),
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                    controller: controller,
+                    decoration: InputDecoration(
+                        hintText: 'Read new book',
+                        border: UnderlineInputBorder()),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter a todo name.';
+                      } else {
+                        return null;
+                      }
+                    }),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   DialogButton(
-                      label: 'Add', onPressed: onAdd, color: Colors.green),
+                      label: 'Add',
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          onAdd();
+                        } else {
+                          return null;
+                        }
+                      },
+                      color: Colors.green),
                   SizedBox(width: 5),
                   DialogButton(
                       label: 'Cancel', onPressed: onCancel, color: Colors.red),
