@@ -9,6 +9,7 @@ import 'package:streamline/widgets/dialog_box.dart';
 import 'package:streamline/widgets/habit_circle.dart';
 
 import 'package:streamline/model/habit.dart';
+import 'package:streamline/widgets/home_widgets.dart';
 import '../sub_screens/edit_habit.dart';
 import '../sub_screens/new_habit_screen.dart';
 import '../../constants/colors.dart';
@@ -37,14 +38,26 @@ class HabitsScreen extends StatelessWidget {
       key: _scaffoldKey,
       child: Scaffold(
         backgroundColor: const Color(0xFFFDEAC1),
-        body: Stack(alignment: AlignmentDirectional.bottomEnd, children: [
+        body: Stack( alignment: AlignmentDirectional.bottomEnd, children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 60),
+            child: Container(
+              alignment: AlignmentDirectional.topEnd,
+              child: CurrentDateWidget(),
+                      
+            ),
+            
+            
+          ),
+          
+          
           Container(
               decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage('images/habits/background.png'),
                       fit: BoxFit.fill))),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 60),
             child: GetX<HabitsController>(builder: (controller) {
               return GridView.count(
                 crossAxisCount: 2,
@@ -53,24 +66,32 @@ class HabitsScreen extends StatelessWidget {
                 children: List.generate(controller.habits.length, (index) {
                   return GestureDetector(
                       onLongPress: () {
+                        print('pressed');
                         if (controller.habits[index].completedCount ==
                             controller.habits[index].repeatDaily) {
                           MyMessageHandler.showSnackBar(_scaffoldKey,
                               'You\'ve already finished this habit for the day!');
-                        } else {
+                        } else if (controller.habits[index].repeatDaily -
+                                controller.habits[index].completedCount ==
+                            1) {
+                          controller.addHabitToHistory(
+                              content: controller.habits[index].content,
+                              repeat: controller.habits[index].repeatDaily,
+                              timeAdded: controller.habits[index].timeAdded);
+                          
                           controller.completeHabit(
+                            index: index,
                               habitId: controller.habits[index].habitId,
                               uid: controller.uid,
                               completedCount:
                                   controller.habits[index].completedCount,
                               repeat: controller.habits[index].repeatDaily);
-                          if (controller.habits[index].repeatDaily -
-                              controller.habits[index].completedCount == 1) {
-                            controller.addHabitToHistory(
-                                content: controller.habits[index].content,
-                                repeat: controller.habits[index].repeatDaily,
-                                timeAdded: controller.habits[index].timeAdded);
-                          }
+                        } else {
+                          controller.increaseCount(
+                              uid: controller.uid,
+                              habitId: controller.habits[index].habitId,
+                              completedCount:
+                                  controller.habits[index].completedCount);
                         }
                       },
                       onDoubleTap: () {

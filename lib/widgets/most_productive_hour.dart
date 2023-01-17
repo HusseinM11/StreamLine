@@ -38,7 +38,7 @@ class MostProductiveHour extends StatelessWidget {
                           hour: controller.getMostProductiveHour(), minute: 0)) ??
                       DateTime.now()),
                   style: TextStyle(
-                      fontSize: 36,
+                      fontSize: 30,
                       fontWeight: FontWeight.w700,
                       color: Colors.white),
                 );

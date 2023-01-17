@@ -3,6 +3,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 
+import '../constants/colors.dart';
 import '../controller/todo_controller.dart';
 import '../model/todo.dart';
 
@@ -30,12 +31,16 @@ class TodoTile extends StatelessWidget {
       ]),
       child: Row(
         children: [
-          Checkbox(
-              value: todo.isCompleted,
-              onChanged: onChanged,
-              checkColor: Colors.white,
-              activeColor: Color(0xFFFF6E50),
-              side: BorderSide(width: 0.6, color: Color(0xFFFF6E50))),
+          Transform.scale(
+            scale: 1.2,
+            child: Checkbox(
+              shape: const CircleBorder(),
+                value: todo.isCompleted,
+                onChanged: onChanged,
+                checkColor: Colors.white,
+                activeColor: AppColors.orange2,
+                side: BorderSide(width: 0.6, color: AppColors.orange2)),
+          ),
           Text(todo.content,
               style: TextStyle(
                   fontSize: 18,

@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: _tabs[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: _selectedIndex == 1 ? AppColors.bg2 : _selectedIndex == 2 ? AppColors.bg2 : Colors.white,
+        backgroundColor: _selectedIndex == 1 ? AppColors.bg2 : _selectedIndex == 2 ? AppColors.bg2 : _selectedIndex == 3 ? AppColors.bg2 : Colors.white,
         elevation: 0,
         unselectedItemColor: const Color(0xFF312B26).withOpacity(0.6),
         selectedItemColor: const Color(0xFFFF6E50),

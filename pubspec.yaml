@@ -40,6 +40,7 @@ dependencies:
   get: ^4.6.5
   cron: ^0.5.1
   fl_chart: ^0.55.2
+  dcdg: ^3.0.0
   
 
 
@@ -77,6 +78,7 @@ flutter:
     - images/affirmations/
     - images/habits/
     - images/home/
+    - images/signup/
     - icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see

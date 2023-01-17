@@ -1,9 +1,8 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:streamline/constants/colors.dart';
-
+import 'package:streamline/utils/root.dart';
 
 import '../constants/firebase_constants.dart';
 import '../model/user.dart';
@@ -17,7 +16,7 @@ class AuthController extends GetxController {
   @override
   onInit() async {
     super.onInit();
-    
+
     _firebaseUser.bindStream(auth.authStateChanges());
   }
 
@@ -34,7 +33,7 @@ class AuthController extends GetxController {
       );
       if (await userController.createNewUser(_user)) {
         userController.user = _user;
-        Get.back();
+        Get.to(Root());
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

@@ -20,8 +20,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.bg2,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.bg2,
         elevation: 0,
         title: const Text('Settings',
             style: TextStyle(
@@ -29,69 +30,73 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 fontWeight: FontWeight.w600,
                 fontSize: 22)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20.0),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('General',
-                  style: TextStyle(
-                    color: AppColors.darkGrey.withOpacity(0.8),
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                  )),
-              const SizedBox(height: 20),
-              SettingsTiles(
-                label: 'Account',
-                icon: FontAwesomeIcons.user,
-                onPressed: () {},
-              ),
-              const LightGreyDivider(),
-              SettingsTiles(
-                label: 'Notifications',
-                icon: FontAwesomeIcons.user,
-                onPressed: () {},
-              ),
-              const LightGreyDivider(),
-              SettingsTiles(
-                label: 'Log Out',
-                icon: FontAwesomeIcons.user,
-                onPressed: () {
-                  authController.signOut();
-                },
-              ),
-              const LightGreyDivider(),
-              
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  DarkModeSwitch(),
-                  Switch(
-                    value: darkMode,
-                    onChanged: (bool value) {
-                      setState(() {
-                        darkMode = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Text('Feedback',
-                  style: TextStyle(
-                    color: AppColors.darkGrey.withOpacity(0.8),
-                    fontSize: 22,
-                    fontWeight: FontWeight.w500,
-                  )),
-              const SizedBox(height: 20),
-              SettingsTiles(
-                label: 'Report a bug',
-                icon: FontAwesomeIcons.user,
-                onPressed: () {},
-              ),
-              
-            ]),
+      body: Container(
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('images/habits/settingsbg.png'),
+                fit: BoxFit.cover)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20.0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('General',
+                    style: TextStyle(
+                      color: AppColors.darkGrey.withOpacity(0.8),
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                    )),
+                const SizedBox(height: 20),
+                SettingsTiles(
+                  label: 'Account',
+                  icon: FontAwesomeIcons.user,
+                  onPressed: () {},
+                ),
+                const LightGreyDivider(),
+                SettingsTiles(
+                  label: 'Notifications',
+                  icon: FontAwesomeIcons.user,
+                  onPressed: () {},
+                ),
+                const LightGreyDivider(),
+                SettingsTiles(
+                  label: 'Log Out',
+                  icon: FontAwesomeIcons.user,
+                  onPressed: () {
+                    authController.signOut();
+                  },
+                ),
+                const LightGreyDivider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DarkModeSwitch(),
+                    Switch(
+                      value: darkMode,
+                      onChanged: (bool value) {
+                        setState(() {
+                          darkMode = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text('Feedback',
+                    style: TextStyle(
+                      color: AppColors.darkGrey.withOpacity(0.8),
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                    )),
+                const SizedBox(height: 20),
+                SettingsTiles(
+                  label: 'Report a bug',
+                  icon: FontAwesomeIcons.user,
+                  onPressed: () {},
+                ),
+              ]),
+        ),
       ),
     );
   }

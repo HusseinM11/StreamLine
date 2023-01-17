@@ -24,15 +24,16 @@ class ActivityTile extends StatelessWidget {
 
   // convert minutes to hour format
   String getDuration(int minutes) {
-    String hrs = ((minutes / 60).floor()).toString();
-    String remMins = (minutes % 60).toString();
+  String hrs = ((minutes / 60).floor()).toString();
+  String remMins = (minutes % 60).toString();
 
-    if (minutes % 60 == 0) {
-      return hrs;
-    } else  {
-      return hrs + ':0' + remMins;
-    } 
+  if (minutes % 60 == 0) {
+    return hrs;
+  } else {
+    return "$hrs:${remMins.padLeft(2, '0')}";
   }
+}
+
 
   int secondsToMinutes(int seconds) {
     return (seconds / 60).floor();
@@ -69,10 +70,11 @@ class ActivityTile extends StatelessWidget {
             width: 150,
             height: 10,
             decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
+                color: AppColors.orange2,
+                /* gradient: LinearGradient(colors: [
                   Color.fromARGB(255, 211, 27, 7),
                   Color(0xFFFFC500)
-                ]),
+                ]), */
                 borderRadius: BorderRadius.circular(10)),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -128,7 +130,7 @@ class ActivityTile extends StatelessWidget {
                           child: Stack(
                             children: [
                               CircularPercentIndicator(
-                                backgroundColor: AppColors.orange,
+                                backgroundColor: AppColors.orange.withOpacity(0.5),
                                 progressColor: Colors.white,
                                 percent: percentCompleted() < 1
                                     ? percentCompleted()

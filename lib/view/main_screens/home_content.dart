@@ -24,8 +24,6 @@ import '../../widgets/todo_tile.dart';
 class HomeContentScreen extends StatelessWidget {
   HomeContentScreen({super.key});
 
-  String date = DateFormat("MMMM, dd, yyyy").format(DateTime.now());
-
   final _controller = TextEditingController();
 
   void startActivity(int index) {
@@ -76,7 +74,7 @@ class HomeContentScreen extends StatelessWidget {
           controller.addActivityToHistory(
               content: controller.activities[index].content,
               timeAdded: controller.activities[index].timeAdded);
-              timer.cancel();
+          timer.cancel();
         } else {
           controller.saveActivity(
             uid: controller.uid,
@@ -93,7 +91,14 @@ class HomeContentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void addActivity() {
-      showDialog(
+      showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0),
+                                      ),
+                                    ),
+                                    isScrollControlled: true,
           context: context,
           builder: (context) {
             return AddActivityDialog();
@@ -102,7 +107,14 @@ class HomeContentScreen extends StatelessWidget {
 
     void editActivity(int index) {
       debugPrint('pressed');
-      showDialog(
+      showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0),
+                                      ),
+                                    ),
+                                    isScrollControlled: true,
           context: context,
           builder: (context) {
             return EditActivityDialog(
@@ -112,6 +124,7 @@ class HomeContentScreen extends StatelessWidget {
     }
 
     return Scaffold(
+      
         backgroundColor: const Color(0xFFFDEAC1),
         body: SingleChildScrollView(
           child: Column(
@@ -131,15 +144,7 @@ class HomeContentScreen extends StatelessWidget {
                         horizontal: 20.0, vertical: 10),
                     child: Column(children: [
                       const SizedBox(height: 50),
-                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                        Text(date,
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: const Color(0xFF312B26).withOpacity(0.9),
-                                fontWeight: FontWeight.w300)),
-                        const SizedBox(width: 5),
-                        const Icon(FeatherIcons.calendar)
-                      ]),
+                      CurrentDateWidget(),
                       const SizedBox(height: 35),
                       Row(
                         children: [
@@ -221,23 +226,27 @@ class HomeContentScreen extends StatelessWidget {
                     ],
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 40),
+                    padding:
+                        const EdgeInsets.only(left: 20.0, top: 40, bottom: 20),
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Activities',
-                                style: TextStyle(
-                                    fontSize: 26, fontWeight: FontWeight.w600)),
-                            SizedBox(
-                                height: 25,
-                                width: 60,
-                                child: PlusButton(
-                                  onPressed: () => addActivity(),
-                                )),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Activities',
+                                  style: TextStyle(
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w600)),
+                              SizedBox(
+                                  height: 25,
+                                  width: 60,
+                                  child: PlusButton(
+                                    onPressed: () => addActivity(),
+                                  )),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 15),
                         GetX<ActivitiesController>(
@@ -249,51 +258,75 @@ class HomeContentScreen extends StatelessWidget {
                               height: 165,
                               child: controller.activities.isEmpty
                                   ? Center(
+                                      child: TextButton(
+                                      onPressed: addActivity,
                                       child: Text(
                                           'Add Your Daily Activities Here!',
                                           style: TextStyle(
                                               fontSize: 23,
                                               fontWeight: FontWeight.w600,
                                               color: AppColors.orange2)),
-                                    )
-                                  : ListView.builder(
-                                      itemCount: controller.activities.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: ((context, index) {
-                                        return ActivityTile(
-                                          onPlay: () {
-                                            startActivity(index);
-                                          },
-                                          activity:
-                                              controller.activities[index],
-                                          onDoubleTap: () =>
-                                              editActivity(index),
-                                          onDone: () =>
-                                              controller.restartActivity(
-                                                  actvId: controller
-                                                      .activities[index].actvId,
-                                                  uid: controller.uid),
-                                        );
-                                      }),
+                                    ))
+                                  : Container(
+                                      child: ListView.builder(
+                                        itemCount: controller.activities.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: ((context, index) {
+                                          return ActivityTile(
+                                            onPlay: () {
+                                              startActivity(index);
+                                            },
+                                            activity:
+                                                controller.activities[index],
+                                            onDoubleTap: () =>
+                                                editActivity(index),
+                                            onDone: () =>
+                                                controller.restartActivity(
+                                                    actvId: controller
+                                                        .activities[index]
+                                                        .actvId,
+                                                    uid: controller.uid),
+                                          );
+                                        }),
+                                      ),
                                     ),
                             );
                           },
                         ),
                         const SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Todo\'s',
-                                style: TextStyle(
-                                    fontSize: 26, fontWeight: FontWeight.w600)),
-                            SizedBox(
-                              height: 25,
-                              width: 60,
-                              child: PlusButton(
-                                  onPressed: () => showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return DialogBox(
+                        Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Todo\'s',
+                                  style: TextStyle(
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w600)),
+                              SizedBox(
+                                height: 25,
+                                width: 60,
+                                child: PlusButton(
+                                  onPressed: () => showModalBottomSheet(
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0),
+                                      ),
+                                    ),
+                                    isScrollControlled: true,
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return SingleChildScrollView(
+                                        padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                                        // the keyboard automatically disappears
+                                        // when the bottom sheet is opened
+                                        keyboardDismissBehavior:
+                                            ScrollViewKeyboardDismissBehavior
+                                                .onDrag,
+
+                                        child: DialogBox(
                                             controller: _controller,
                                             onCancel: () {
                                               Get.back();
@@ -303,11 +336,15 @@ class HomeContentScreen extends StatelessWidget {
                                               todosController.addTodo(
                                                   content: _controller.text);
                                               _controller.clear();
-                                            });
-                                      })),
-                              // child: PlusButton(controller: _controller, todosController: todosController),
-                            ),
-                          ],
+                                              Get.back();
+                                            }),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         GetX<TodosController>(
                           initState: (_) async {
@@ -316,15 +353,33 @@ class HomeContentScreen extends StatelessWidget {
                           builder: (controller) {
                             return Container(
                               constraints: const BoxConstraints(minHeight: 190),
-                              //height: MediaQuery.of(context).size.height,
-
                               child: Get.find<TodosController>().todos.isEmpty
-                                  ? const Center(
-                                      child: Text('Add Your Daily Todos Here!',
-                                          style: TextStyle(
-                                              fontSize: 23,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColors.orange2)),
+                                  ? Center(
+                                      child: TextButton(
+                                        onPressed: () => showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return DialogBox(
+                                                controller: _controller,
+                                                onCancel: () {
+                                                  Get.back();
+                                                  _controller.clear();
+                                                },
+                                                onAdd: () {
+                                                  todosController.addTodo(
+                                                      content:
+                                                          _controller.text);
+                                                  _controller.clear();
+                                                });
+                                          },
+                                        ),
+                                        child: Text(
+                                            'Add Your Daily Todos Here!',
+                                            style: TextStyle(
+                                                fontSize: 23,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.orange2)),
+                                      ),
                                     )
                                   : ListView.builder(
                                       shrinkWrap: true,

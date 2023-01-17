@@ -92,7 +92,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                    const SizedBox(height: 20),
                    Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
+                    children: const [
                         Expanded(child: MostProductiveHour()),
                         Expanded(child: MostProductiveDay()),
                     ],

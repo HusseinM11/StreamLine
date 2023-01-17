@@ -98,7 +98,7 @@ class TodosController extends GetxController {
         'iscompleted': false,
         'timeadded': Timestamp.now(),
       });
-      Get.back();
+      
     } catch (e) {
       print(e);
       rethrow;
@@ -149,9 +149,8 @@ class TodosController extends GetxController {
 
   int numberOfCompletedTodosToday() {
     int count = 0;
-    for (var element in todos) {
-      if (element.isCompleted == true &&
-          element.timeCompleted?.toDate().day == DateTime.now().day) {
+    for (var element in todosHistory) {
+      if (element.timeCompleted!.toDate() ==  DateTime.now().day) {
         count++;
       }
     }

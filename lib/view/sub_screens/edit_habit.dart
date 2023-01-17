@@ -45,11 +45,14 @@ class _NewHabitScreenState extends State<EditHabitScreen> {
     _icon = icon!;
     setState(() {});
   }
+  // get the selected priority from the habits list inside the habits get controller
+  
 
   late int repeat = habitsController.habits[widget.index].repeatDaily;
 
   @override
   Widget build(BuildContext context) {
+    String _priority = habitsController.habits[widget.index].priority;
     String content = habitsController.habits[widget.index].content;
     String? description = habitsController.habits[widget.index].description;
     TextEditingController titleController =
@@ -203,14 +206,60 @@ class _NewHabitScreenState extends State<EditHabitScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.center,
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.easeInOut,
+                            child: CupertinoSegmentedControl<String>(
+                              //style the segmented control buttons
+                              selectedColor: AppColors.orange2,
+                              unselectedColor:
+                                  AppColors.darkGrey.withOpacity(0.3),
+                              borderColor: Colors.transparent,
+                              pressedColor: AppColors.orange2,
+
+                              children: const {
+                                'High': Padding(
+                                  padding: EdgeInsets.all(13.0),
+                                  child: Text('High',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                                'Medium': Padding(
+                                  padding: EdgeInsets.all(13.0),
+                                  child: Text('Medium',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                                'Low': Padding(
+                                  padding: EdgeInsets.all(13.0),
+                                  child: Text('Low',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                              },
+                              onValueChanged: (String newValue) {
+                                setState(() {
+                                  _priority = newValue;
+                                });
+                              },
+                              groupValue: _priority,
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 40),
                         RepeatSetter(
                           repeat: repeat,
                           scaffoldKey: _scaffoldKey,
                           callback: (p0) {
-                          
-                              repeat = p0;
-                            
+                            repeat = p0;
                           },
                         ),
                         const SizedBox(height: 75),
@@ -226,7 +275,11 @@ class _NewHabitScreenState extends State<EditHabitScreen> {
                                         .habits[widget.index].habitId,
                                     icon: _icon,
                                     repeat: repeat,
-                                    uid: habitsController.uid);
+                                    uid: habitsController.uid,
+                                    completedCount: habitsController
+                                        .habits[widget.index].completedCount,
+                                        priority: _priority);
+                                Get.back();
                               }),
                         ),
                       ],
@@ -291,9 +344,9 @@ class _RepeatSetterState extends State<RepeatSetter> {
                         widget._scaffoldKey, 'Cannot decrease less than 1.');
                   } else if (widget.repeat >= 1) {
                     setState(() {
-                    widget.repeat--;
-                    widget.callback(widget.repeat);
-                  });
+                      widget.repeat--;
+                      widget.callback(widget.repeat);
+                    });
                   }
                 },
                 icon: const Icon(FeatherIcons.minus,

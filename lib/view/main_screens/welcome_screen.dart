@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/colors.dart';
 import '../../widgets/auth_widgets.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -22,11 +23,12 @@ class WelcomeScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                     SizedBox(height:0),
                       const Text(
                         'StreamLine',
-                        style: TextStyle(color: Colors.orange, fontSize: 30),
+                        style: TextStyle(color: AppColors.orange2, fontSize: 30, fontWeight: FontWeight.w700),
                       ),
                       const SizedBox(height: 180),
                       Column(
@@ -44,7 +46,7 @@ class WelcomeScreen extends StatelessWidget {
                           SizedBox(height: 15),
                           Text(
                               textAlign: TextAlign.center,
-                              'Track your daily activities and habits to better manage your life and, be better!',
+                              'Track your daily activities and habits to better manage your life and improve daily!',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -90,7 +92,8 @@ class WelcomeScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            )
+                            ),
+                            SizedBox(height:20),
                           ],
                         ),
                       ),

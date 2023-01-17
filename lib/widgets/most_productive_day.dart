@@ -35,7 +35,7 @@ class MostProductiveDay extends StatelessWidget {
                 return Text(
                    controller.getMostProductiveDay() == null ? 'NaN' : DateFormat('EEEE').format(controller.getMostProductiveDay()!),
                   style: TextStyle(
-                      fontSize: 36,
+                      fontSize: 30,
                       fontWeight: FontWeight.w700,
                       color: Colors.white),
                 );

@@ -47,9 +47,10 @@ class HabitsController extends GetxController {
       {required String uid,
       required String habitId,
       required int repeat,
-      required completedCount}) async {
+      required completedCount,
+      required int index}) async {
     try {
-     await _firestore
+      await _firestore
           .collection("users")
           .doc(uid)
           .collection('habits')
@@ -57,7 +58,8 @@ class HabitsController extends GetxController {
           .update(
               {'iscompleted': true, 'completedcount': FieldValue.increment(1)});
       if (repeat - completedCount == 1) {
-      await  _firestore
+        DateTime lastCompletedDate = habits[index].timeCompleted!.toDate();
+        await _firestore
             .collection("users")
             .doc(uid)
             .collection('habits')
@@ -65,22 +67,41 @@ class HabitsController extends GetxController {
             .update({
           'timecompleted': Timestamp.now(),
         });
+        DateTime currentDate = DateTime.now();
+
+        if (lastCompletedDate != null &&
+            currentDate.difference(lastCompletedDate).inDays == 1) {
+          await _firestore
+              .collection("users")
+              .doc(uid)
+              .collection('habits')
+              .doc(habitId)
+              .update({'streak': FieldValue.increment(1)});
+        } else {
+          await _firestore
+              .collection("users")
+              .doc(uid)
+              .collection('habits')
+              .doc(habitId)
+              .update({'streak': 1});
+        }
+        lastCompletedDate = currentDate;
       }
-      
     } catch (e) {
       print(e);
       rethrow;
     }
   }
 
-  Future<void> updateHabit({
-    required String content,
-    required String? description,
-    required int repeat,
-    required IconData icon,
-    required String uid,
-    required String habitId,
-  }) async {
+  Future<void> updateHabit(
+      {required String content,
+      required String? description,
+      required int repeat,
+      required IconData icon,
+      required String uid,
+      required String habitId,
+      required int completedCount,
+      required String priority}) async {
     try {
       _firestore
           .collection("users")
@@ -92,8 +113,26 @@ class HabitsController extends GetxController {
         'description': description,
         'repeatdaily': repeat,
         'icon': icon.codePoint,
+        'completedcount': completedCount,
+        'priority': priority,
       });
-      Get.back();
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<void> increaseCount(
+      {required String uid,
+      required String habitId,
+      required int completedCount}) async {
+    try {
+      _firestore
+          .collection("users")
+          .doc(uid)
+          .collection("habits")
+          .doc(habitId)
+          .update({'completedcount': FieldValue.increment(1)});
     } catch (e) {
       print(e);
       rethrow;
@@ -105,14 +144,27 @@ class HabitsController extends GetxController {
         .collection("users")
         .doc(_uid)
         .collection("habits")
-        .orderBy("timeadded", descending: false)
         .snapshots()
         .map((QuerySnapshot query) {
-      // List<HabitModel> retVal = [];
-
       List<HabitModel> retVal = [];
       query.docs.forEach((element) {
         retVal.add(HabitModel.fromDocumentSnapshot(element));
+      });
+      retVal.sort((a, b) {
+        if (a.priority == b.priority) {
+          return 0;
+        }
+        if (a.priority == 'High') {
+          return -1;
+        } else if (a.priority == 'Medium') {
+          if (b.priority == 'High') {
+            return 1;
+          } else {
+            return -1;
+          }
+        } else {
+          return 1;
+        }
       });
       return retVal;
     });
@@ -125,7 +177,8 @@ class HabitsController extends GetxController {
       required bool isCompleted,
       required IconData icon,
       required int completedCount,
-      required Timestamp timeAdded}) async {
+      required Timestamp timeAdded,
+      required String priority}) async {
     try {
       await _firestore.collection("users").doc(_uid).collection("habits").add({
         'content': content,
@@ -134,9 +187,9 @@ class HabitsController extends GetxController {
         'iscompleted': isCompleted,
         'icon': icon.codePoint,
         'completedcount': completedCount,
-        'timeadded': timeAdded
+        'timeadded': timeAdded,
+        'priority': priority,
       });
-      Get.back();
     } catch (e) {
       print(e);
       rethrow;
@@ -148,7 +201,11 @@ class HabitsController extends GetxController {
       required int repeat,
       required Timestamp timeAdded}) async {
     try {
-      await _firestore.collection("users").doc(_uid).collection("habitshistory").add({
+      await _firestore
+          .collection("users")
+          .doc(_uid)
+          .collection("habitshistory")
+          .add({
         'content': content,
         'repeatdaily': repeat,
         'iscompleted': true,
@@ -156,7 +213,6 @@ class HabitsController extends GetxController {
         'timeadded': timeAdded,
         'timecompleted': Timestamp.now()
       });
-      
     } catch (e) {
       print(e);
       rethrow;
@@ -219,14 +275,12 @@ class HabitsController extends GetxController {
   }
 
   int getCompletedHabits(DateTime day) {
-  int count = 0;
-  for (var element in habits.where((task) => task.isCompleted)) {
-    if (element.timeCompleted!.toDate().day == day.day) {
-      count++;
+    int count = 0;
+    for (var element in habits.where((task) => task.isCompleted)) {
+      if (element.timeCompleted!.toDate().day == day.day) {
+        count++;
+      }
     }
+    return count;
   }
-  return count;
 }
-
-}
-
