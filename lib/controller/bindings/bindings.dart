@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
-import 'package:streamline/auth/login.dart';
+import 'package:streamline/view/auth/login.dart';
+import 'package:streamline/controller/affirmation_controller.dart';
 import 'package:streamline/controller/all_tasksController.dart';
 import 'package:streamline/controller/todo_controller.dart';
 import 'package:streamline/controller/users_controller.dart';
@@ -16,5 +17,6 @@ class InitialBinding extends Bindings {
         fenix: true);
     Get.lazyPut<TodosController>(() => TodosController(), fenix: true);
     Get.lazyPut<AllTasksController>(() => AllTasksController(), fenix: true);
+    Get.lazyPut<AffirmationController>(() => AffirmationController(), fenix: true);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
@@ -5,15 +6,15 @@ import 'package:intl/intl.dart';
 import 'package:streamline/controller/habits_controller.dart';
 import 'package:streamline/view/main_screens/progress.dart';
 import 'package:streamline/view/main_screens/settings.dart';
-import 'package:streamline/widgets/dialog_box.dart';
-import 'package:streamline/widgets/habit_circle.dart';
+import 'package:streamline/view/widgets/dialog_box.dart';
+import 'package:streamline/view/widgets/habit_circle.dart';
 
 import 'package:streamline/model/habit.dart';
-import 'package:streamline/widgets/home_widgets.dart';
+import 'package:streamline/view/widgets/home_widgets.dart';
 import '../sub_screens/edit_habit.dart';
 import '../sub_screens/new_habit_screen.dart';
 import '../../constants/colors.dart';
-import '../../widgets/snackbar.dart';
+import '../widgets/snackbar.dart';
 import 'home.dart';
 
 class HabitsScreen extends StatelessWidget {
@@ -54,19 +55,38 @@ class HabitsScreen extends StatelessWidget {
           Container(
               decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('images/habits/background.png'),
+                      image: AssetImage('assets/images/habits/background.png'),
                       fit: BoxFit.fill))),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 60),
             child: GetX<HabitsController>(builder: (controller) {
-              return GridView.count(
+              return controller.habits.isEmpty ? Center(
+                child: SizedBox(
+                            width: double.infinity,
+                            child: DefaultTextStyle(
+                              style: const TextStyle(
+                                  color: AppColors.orange2,
+                                  fontSize: 27,
+                                  fontWeight: FontWeight.w600,
+    
+                                  height: 1.4),
+                              child: AnimatedTextKit(
+                                totalRepeatCount: 1,
+                                animatedTexts: [
+                                  TypewriterAnimatedText('Add a habit to get started by clicking the + button below.', textAlign: TextAlign.center,
+                                      speed: Duration(milliseconds: 40)),
+                                ],
+                              ),
+                            ),),
+              )
+                        : GridView.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 40,
                 children: List.generate(controller.habits.length, (index) {
                   return GestureDetector(
                       onLongPress: () {
-                        print('pressed');
+                       
                         if (controller.habits[index].completedCount ==
                             controller.habits[index].repeatDaily) {
                           MyMessageHandler.showSnackBar(_scaffoldKey,
@@ -74,6 +94,11 @@ class HabitsScreen extends StatelessWidget {
                         } else if (controller.habits[index].repeatDaily -
                                 controller.habits[index].completedCount ==
                             1) {
+                              //check if the habit is already in the habitsHistory list inside the controller
+                              //if it is, then don't add it again
+                              //if it isn't, then add it
+                              
+
                           controller.addHabitToHistory(
                               content: controller.habits[index].content,
                               repeat: controller.habits[index].repeatDaily,

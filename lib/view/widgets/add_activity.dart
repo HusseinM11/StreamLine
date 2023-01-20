@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 
-import '../constants/colors.dart';
-import '../controller/activity_controller.dart';
+import '../../constants/colors.dart';
+import '../../controller/activity_controller.dart';
 
 class AddActivityDialog extends StatelessWidget {
   AddActivityDialog({super.key});
@@ -17,7 +17,7 @@ class AddActivityDialog extends StatelessWidget {
   final FixedExtentScrollController _wheelHourController =
       FixedExtentScrollController();
 
-  final _formKey = GlobalKey<FormState>();
+  static final _formKey = GlobalKey<FormState>();
 
   // text style variables
   var whiteTextStyle = const TextStyle(color: AppColors.orange2, fontWeight: FontWeight.w600, fontSize: 18);

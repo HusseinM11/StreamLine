@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide GetStringUtils;
-import 'package:streamline/widgets/home_widgets.dart';
+import 'package:streamline/constants/colors.dart';
+import 'package:streamline/view/widgets/home_widgets.dart';
 
 import '../../constants/firebase_constants.dart';
+import '../../controller/affirmation_controller.dart';
 import '../../controller/auth_controller.dart';
 import '../../controller/users_controller.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class AffirmationsScreen extends StatefulWidget {
   AffirmationsScreen({super.key});
@@ -15,6 +18,8 @@ class AffirmationsScreen extends StatefulWidget {
 }
 
 late String name;
+
+AffirmationController controller = Get.find<AffirmationController>();
 
 class _AffirmationsScreenState extends State<AffirmationsScreen> {
   @override
@@ -28,7 +33,7 @@ class _AffirmationsScreenState extends State<AffirmationsScreen> {
               child: Container(
                   decoration: const BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage('images/affirmations/flowers.png'),
+                          image: AssetImage('assets/images/affirmations/flowers.png'),
                           fit: BoxFit.fill))),
             ),
             Padding(
@@ -61,15 +66,44 @@ class _AffirmationsScreenState extends State<AffirmationsScreen> {
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.0),
-                    child: Text('This is your daily afirmation:',
+                    child: Text('This is your daily food for thought:',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w100)),
                   ),
                   const SizedBox(height: 80),
-                  const Text(
-                      'Through the power of my thoughts and words, incredible transformations are happening in me and within my life right now.',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.w500)),
+                  GetBuilder<AffirmationController>(
+                    initState: (_) async {
+                      controller.isLoading = true;
+                      await controller.fetchAffirmation();
+                    },
+                    builder: (controller) {
+                      if (controller.isLoading) {
+                        return CircularProgressIndicator();
+                      } else if (controller.affirmation == '') {
+                        return Container();
+                      } else {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: DefaultTextStyle(
+                            style: const TextStyle(
+                                color: AppColors.darkGrey,
+                                fontSize: 26,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 1.3,
+                                wordSpacing: 1.2,
+                                height: 1.4),
+                            child: AnimatedTextKit(
+                              totalRepeatCount: 1,
+                              animatedTexts: [
+                                TyperAnimatedText(controller.affirmation + '.',
+                                    speed: Duration(milliseconds: 100)),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
                   const SizedBox(height: 200),
                   Center(
                     child: TextButton(
@@ -80,7 +114,7 @@ class _AffirmationsScreenState extends State<AffirmationsScreen> {
                           style: TextStyle(
                               fontSize: 40,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFFFF6E50))),
+                              color: AppColors.orange2)),
                     ),
                   )
                 ],

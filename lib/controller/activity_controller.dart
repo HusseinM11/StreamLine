@@ -189,9 +189,9 @@ class ActivitiesController extends GetxController {
 
   int numberOfCompletedActivitiesToday() {
     int count = 0;
-    for (var element in activities) {
-      if (element.isCompleted == true &&
-          element.timeCompleted?.toDate().day == DateTime.now().day) {
+    for (var element in activitiesHistory) {
+      if (
+          element.timeCompleted!.toDate().day == DateTime.now().day) {
         count++;
       }
     }
@@ -207,4 +207,22 @@ class ActivitiesController extends GetxController {
     }
     return count;
   }
+  int totalActivitiesToday() {
+  int count = 0;
+  for (var element in activities) {
+    if (element.timeAdded.toDate().day == DateTime.now().day) {
+      count++;
+    }
+  }
+
+  for (var element in activitiesHistory) {
+    if (element.timeCompleted!.toDate().day == DateTime.now().day) {
+      //check if the todo is in the todos list
+      if (activities.where((activity) => activity.content == element.content).isEmpty) {
+        count++;
+      }
+    }
+  }
+  return count;
+}
 }

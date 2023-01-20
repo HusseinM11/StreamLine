@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:streamline/constants/colors.dart';
-import 'package:streamline/widgets/auth_widgets.dart';
+import 'package:streamline/view/widgets/auth_widgets.dart';
 
-import '../constants/firebase_constants.dart';
+import '../../constants/firebase_constants.dart';
+import '../../controller/users_controller.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -16,6 +18,7 @@ class _SignUpState extends State<SignUp> {
   late String name;
   late String email;
   late String password;
+  late String confirmedPassword;
   late String profileImage;
   late String _uid;
   bool processing = false;
@@ -25,24 +28,28 @@ class _SignUpState extends State<SignUp> {
   bool passwordVisible = false;
 
   void signUp() async {
-    setState(() {
+    
+
+    if (_formKey.currentState!.validate()) {
+      setState(() {
       processing = true;
     });
-    if (_formKey.currentState!.validate()) {
       authController.register(email: email, password: password, name: name);
-
-      if (authController.user != null) {
+      UserController userController = Get.put<UserController>(UserController());
+      if (userController.user.id != null) {
         _formKey.currentState!.reset();
+      }else {
+        setState(() {
+      processing = false;
+    });
       }
-    
-      setState(() {
-        processing = false;
-      });
+
+      
     } else {
       setState(() {
         processing = false;
       });
-      Get.snackbar('Error', 'Please fill all fields,',
+      Get.snackbar('Error', 'Please make sure all fields are valid.',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: AppColors.darkGrey.withOpacity(0.7),
           colorText: Colors.white);
@@ -55,13 +62,10 @@ class _SignUpState extends State<SignUp> {
       key: _scaffoldKey,
       child: Scaffold(
           backgroundColor: const Color(0xFFFF6E50),
-          body: Stack(
-            
-            children:  [
-                Positioned(
-                   bottom: -10,
-                    child: Image.asset('images/signup/bg.png')),
-               SafeArea(
+          body: Stack(children: [
+            Positioned(
+                bottom: -10, child: Image.asset('assets/images/signup/bg.png')),
+            SafeArea(
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -95,7 +99,8 @@ class _SignUpState extends State<SignUp> {
                               child: Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
                                     child: TextFormField(
                                       style: const TextStyle(
                                           color: Colors.white,
@@ -116,7 +121,8 @@ class _SignUpState extends State<SignUp> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
                                     child: TextFormField(
                                       style: const TextStyle(
                                           color: Colors.white,
@@ -124,9 +130,11 @@ class _SignUpState extends State<SignUp> {
                                       validator: (value) {
                                         if (value!.isEmpty) {
                                           return 'please enter your email ';
-                                        } else if (value.isValidEmail() == false) {
+                                        } else if (value.isValidEmail() ==
+                                            false) {
                                           return 'invalid email';
-                                        } else if (value.isValidEmail() == true) {
+                                        } else if (value.isValidEmail() ==
+                                            true) {
                                           return null;
                                         }
                                         return null;
@@ -145,7 +153,8 @@ class _SignUpState extends State<SignUp> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
                                     child: TextFormField(
                                       style: const TextStyle(
                                           color: Colors.white,
@@ -159,22 +168,65 @@ class _SignUpState extends State<SignUp> {
                                       onChanged: (value) {
                                         password = value.trim();
                                       },
-                                      obscureText: passwordVisible,
+                                      obscureText: !passwordVisible,
                                       decoration: textFormDecoration.copyWith(
                                           suffixIcon: IconButton(
                                               onPressed: () {
                                                 setState(() {
-                                                  passwordVisible = !passwordVisible;
+                                                  passwordVisible =
+                                                      !passwordVisible;
                                                 });
                                               },
                                               icon: Icon(
-                                                passwordVisible
+                                                !passwordVisible
                                                     ? Icons.visibility
                                                     : Icons.visibility_off,
                                                 color: const Color(0xFFFDEAC1),
                                               )),
                                           labelText: 'Password',
                                           hintText: 'Enter your password',
+                                          icon: const Icon(
+                                            Icons.vpn_key,
+                                            color: Color(0xFFFDEAC1),
+                                          )),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: TextFormField(
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'please confirm your password';
+                                        } else if (value != password) {
+                                          return 'passwords do not match';
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) {
+                                        confirmedPassword = value.trim();
+                                      },
+                                      obscureText: !passwordVisible,
+                                      decoration: textFormDecoration.copyWith(
+                                          suffixIcon: IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  passwordVisible =
+                                                      !passwordVisible;
+                                                });
+                                              },
+                                              icon: Icon(
+                                                !passwordVisible
+                                                    ? Icons.visibility
+                                                    : Icons.visibility_off,
+                                                color: const Color(0xFFFDEAC1),
+                                              )),
+                                          labelText: 'Confirm password',
+                                          hintText:
+                                              'Enter you password',
                                           icon: const Icon(
                                             Icons.vpn_key,
                                             color: Color(0xFFFDEAC1),
@@ -188,9 +240,9 @@ class _SignUpState extends State<SignUp> {
                             Padding(
                               padding: const EdgeInsets.all(15),
                               child: processing == true
-                                  ? const Center(
-                                      child: CircularProgressIndicator(
-                                          color: Colors.white))
+                                  ? const Center
+                                    //cupertino progress indicator
+                                    (child: CircularProgressIndicator(color: AppColors.orange2))       
                                   : AuthButton(
                                       label: 'Submit',
                                       onPressed: () {
@@ -199,7 +251,8 @@ class _SignUpState extends State<SignUp> {
                                     ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 20.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 20.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:streamline/constants/colors.dart';
 
-import '../controller/habits_controller.dart';
-import '../model/habit.dart';
+import '../../controller/habits_controller.dart';
+import '../../model/habit.dart';
 
 class HabitCircle extends StatelessWidget {
   final String uid;

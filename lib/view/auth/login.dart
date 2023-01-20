@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:streamline/constants/firebase_constants.dart';
-import 'package:streamline/widgets/auth_widgets.dart';
+import 'package:streamline/view/widgets/auth_widgets.dart';
 
-import '../constants/colors.dart';
+import '../../constants/colors.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -29,7 +29,7 @@ class _LogInState extends State<LogIn> {
     if (_formKey.currentState!.validate()) {
       authController.login(email: email, password: password);
 
-      _formKey.currentState!.reset();
+      
       setState(() {
         processing = false;
       });
@@ -54,7 +54,7 @@ class _LogInState extends State<LogIn> {
                     bottom: -250,
                     right: -200,
                     left: -200,
-                    child: Image.asset('images/login/background.png')),
+                    child: Image.asset('assets/images/login/background.png')),
               SafeArea(
               child: Column(
                 children: [
@@ -135,7 +135,7 @@ class _LogInState extends State<LogIn> {
                                         onChanged: (value) {
                                           password = value.trim();
                                         },
-                                        obscureText: passwordVisible,
+                                        obscureText: !passwordVisible,
                                         decoration: textFormDecoration.copyWith(
                                             suffixIcon: IconButton(
                                                 onPressed: () {
@@ -145,7 +145,7 @@ class _LogInState extends State<LogIn> {
                                                   });
                                                 },
                                                 icon: Icon(
-                                                  passwordVisible
+                                                  !passwordVisible
                                                       ? Icons.visibility
                                                       : Icons.visibility_off,
                                                   color: const Color(0xFFFDEAC1),
@@ -214,3 +214,4 @@ class _LogInState extends State<LogIn> {
     );
   }
 }
+

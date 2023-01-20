@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
-import 'package:streamline/widgets/dialog_button.dart';
+import 'package:streamline/view/widgets/dialog_button.dart';
 
-import '../constants/colors.dart';
-import '../controller/todo_controller.dart';
+import '../../constants/colors.dart';
+import '../../controller/todo_controller.dart';
 
 class DialogBox extends StatelessWidget {
   final controller;
@@ -16,14 +16,13 @@ class DialogBox extends StatelessWidget {
       required this.onCancel,
       required this.onAdd});
   final todosController = Get.put(TodosController());
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      height: MediaQuery.of(context).size.height / 2 +
-                MediaQuery.of(context).viewInsets.bottom,
+    return SizedBox(
+       
+      height: MediaQuery.of(context).size.height / 2.75,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
         child: Column(

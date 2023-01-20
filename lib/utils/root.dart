@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:streamline/auth/login.dart';
+import 'package:streamline/view/auth/login.dart';
 import 'package:streamline/view/main_screens/welcome_screen.dart';
 
 import '../controller/auth_controller.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../constants/colors.dart';
-import '../../widgets/auth_widgets.dart';
+import '../widgets/auth_widgets.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -19,7 +19,7 @@ class WelcomeScreen extends StatelessWidget {
                     bottom: -250,
                     right: -200,
                     left: -200,
-                    child: Image.asset('images/welcome_screen/background.png')),
+                    child: Image.asset('assets/images/welcome_screen/background.png')),
                 Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(

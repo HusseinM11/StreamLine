@@ -14,7 +14,7 @@ import 'package:streamline/view/main_screens/habits.dart';
 
 import '../../controller/habits_controller.dart';
 import '../../constants/colors.dart';
-import '../../widgets/snackbar.dart';
+import '../widgets/snackbar.dart';
 
 class NewHabitScreen extends StatefulWidget {
   // List<Habit> habitsList = [];
@@ -91,7 +91,7 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                       decoration: const BoxDecoration(
                           image: DecorationImage(
                               image:
-                                  AssetImage('images/habits/addhabit.png'),
+                                  AssetImage('assets/images/habits/addhabit.png'),
                               fit: BoxFit.fill)),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(

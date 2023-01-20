@@ -12,6 +12,7 @@ class UserController extends GetxController {
   void clear() {
     _userModel.value = UserModel();
   }
+
   Future<bool> createNewUser(UserModel user) async {
     try {
       await firebaseFirestore.collection("users").doc(user.id).set({
@@ -31,6 +32,29 @@ class UserController extends GetxController {
           await firebaseFirestore.collection("users").doc(uid).get();
 
       return UserModel.fromDocumentSnapshot(_doc);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  
+  Future<void> updateEmail(String email) async {
+    try {
+      await auth.currentUser!.updateEmail(email);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  //function to update name in firestore
+  Future<void> updateName(String name) async {
+    try {
+      await firebaseFirestore
+          .collection("users")
+          .doc(auth.currentUser!.uid)
+          .update({"name": name});
     } catch (e) {
       print(e);
       rethrow;

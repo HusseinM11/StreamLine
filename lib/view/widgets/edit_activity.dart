@@ -193,8 +193,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 
-import '../constants/colors.dart';
-import '../controller/activity_controller.dart';
+import '../../constants/colors.dart';
+import '../../controller/activity_controller.dart';
 
 class EditActivityDialog extends StatelessWidget {
   int index;
@@ -203,7 +203,7 @@ class EditActivityDialog extends StatelessWidget {
   final activitiesController = Get.put(ActivitiesController());
 
   // make a final form global key
-  final _formKey = GlobalKey<FormState>();
+  static final _formKey = GlobalKey<FormState>();
   // text style variables
   var whiteTextStyle = const TextStyle(color: AppColors.darkGrey);
   // convert minutes to hours
@@ -244,7 +244,7 @@ class EditActivityDialog extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Divider(
+            const Divider(
               height: 0,
               thickness: 5,
               indent: 165,
@@ -258,24 +258,42 @@ class EditActivityDialog extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Edit Activity',
+                      const Text('Edit Activity',
                           style: TextStyle(
                               fontSize: 22,
                               color: AppColors.orange2,
                               fontWeight: FontWeight.w500)),
                       //make a circular button with a x icon
-                      ElevatedButton(
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed:  () => activitiesController.deleteActivity(
+                          uid: activitiesController.uid,
+                          actvId:
+                              activitiesController.activities[index].actvId),
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              shape: const CircleBorder(),
+                              
+                              backgroundColor: Colors.grey[350],
+                            ),
+                            child: Icon(FeatherIcons.trash, color: Colors.grey[700], size: 22),
+                          ),
+                          ElevatedButton(
                         onPressed: () {
                           Get.back();
                         },
-                        child: Icon(FeatherIcons.x, color: Colors.grey[700]),
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
-                          shape: CircleBorder(),
-                          // padding: EdgeInsets.all(20),
+                          shape: const CircleBorder(),
+                          
                           backgroundColor: Colors.grey[350],
                         ),
-                      )
+                        child: Icon(FeatherIcons.x, color: Colors.grey[700]),
+                      ),
+                        ],
+                      ),
+                      
                     ],
                   ),
                 ),
@@ -307,22 +325,22 @@ class EditActivityDialog extends StatelessWidget {
                       decoration: InputDecoration(
                         hintText:
                             activitiesController.activities[index].content,
-                        errorStyle: TextStyle(color: Colors.red, fontSize: 14),
+                        errorStyle: const TextStyle(color: Colors.red, fontSize: 14),
                         hintStyle: TextStyle(
                             color: AppColors.darkGrey.withOpacity(0.5)),
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: AppColors.darkGrey.withOpacity(0.5)),
                         ),
-                        border: UnderlineInputBorder(
+                        border: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.orange),
                         ),
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
                   child: Text(
                     'Daily goal time',
                     style: TextStyle(
@@ -428,17 +446,17 @@ class EditActivityDialog extends StatelessWidget {
                           colorText: Colors.white);
                     }
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  color: AppColors.orange2,
+                  child: const Padding(
+                    padding:  EdgeInsets.symmetric(horizontal: 50.0),
                     child: Text(
-                      'Add',
+                      'Save',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.w500),
                     ),
                   ),
-                  color: AppColors.orange2,
                 ),
               ],
             )

@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:streamline/controller/all_tasksController.dart';
 
-import '../constants/colors.dart';
+import '../../constants/colors.dart';
 
 class WeeklyChart extends StatefulWidget {
   String toggle;
@@ -37,6 +37,7 @@ class _WeeklyChartState extends State<WeeklyChart> {
                       fontSize: 30,
                       fontWeight: FontWeight.w700,
                       color: Colors.white)),
+                      SizedBox(height: 5),
               GetX<AllTasksController>(
                 initState: (_) async {
                       Get.find<AllTasksController>();
@@ -44,14 +45,14 @@ class _WeeklyChartState extends State<WeeklyChart> {
                 builder: (controller) {
                   return Text('You have completed ${controller.getWeeklyStats().sum} ${controller.getWeeklyStats().sum > 1 ? "tasks" : "task"} this week.',
                       style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.w400,
                           color: Colors.white));
                 },
               ),
               const SizedBox(height: 15),
               SizedBox(
-                  height: 200,
+                  height: 300,
                   child: GetX<AllTasksController>(
                     initState: (_) async {
                       Get.find<AllTasksController>();

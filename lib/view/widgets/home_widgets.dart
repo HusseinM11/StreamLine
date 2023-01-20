@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:streamline/widgets/elevated_button.dart';
+import 'package:streamline/view/widgets/elevated_button.dart';
 
-import '../constants/colors.dart';
+import '../../constants/colors.dart';
 
 extension StringExtension on String {
   String capitalize() {

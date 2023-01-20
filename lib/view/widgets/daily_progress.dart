@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:streamline/controller/todo_controller.dart';
 
-import '../constants/colors.dart';
-import '../controller/activity_controller.dart';
-import '../controller/habits_controller.dart';
+import '../../constants/colors.dart';
+import '../../controller/activity_controller.dart';
+import '../../controller/habits_controller.dart';
 
 class DailyProgressTab extends StatelessWidget {
   const DailyProgressTab({super.key});
@@ -19,9 +19,9 @@ class DailyProgressTab extends StatelessWidget {
   }
 
   int totalTasks() {
-    int total = Get.find<HabitsController>().habits.length +
-        Get.find<ActivitiesController>().activities.length +
-        Get.find<TodosController>().todos.length;
+    int total = Get.find<HabitsController>().totalHabitsToday() +
+        Get.find<ActivitiesController>().totalActivitiesToday() +
+        Get.find<TodosController>().totalTodosToday();
 
     return total;
   }

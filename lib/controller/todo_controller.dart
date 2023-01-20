@@ -9,7 +9,6 @@ import '../model/todo.dart';
 class TodosController extends GetxController {
   //RxList<HabitModel> habits = RxList([]);
   RxList<TodoModel> todos = RxList([]);
-  RxList<TodoModel> completedTodos = RxList([]);
   RxList<TodoModel> todosHistory = RxList([]);
 
   final String _uid = authController.user.uid;
@@ -75,6 +74,7 @@ class TodosController extends GetxController {
       rethrow;
     }
   }
+
   Future<void> deleteTodoFromHistory(String uid, String todoId) async {
     try {
       _firestore
@@ -98,7 +98,6 @@ class TodosController extends GetxController {
         'iscompleted': false,
         'timeadded': Timestamp.now(),
       });
-      
     } catch (e) {
       print(e);
       rethrow;
@@ -150,7 +149,7 @@ class TodosController extends GetxController {
   int numberOfCompletedTodosToday() {
     int count = 0;
     for (var element in todosHistory) {
-      if (element.timeCompleted!.toDate() ==  DateTime.now().day) {
+      if (element.timeCompleted!.toDate().day == DateTime.now().day) {
         count++;
       }
     }
@@ -166,4 +165,25 @@ class TodosController extends GetxController {
     }
     return count;
   }
+
+  int totalTodosToday() {
+  int count = 0;
+  for (var element in todos) {
+    if (element.timeAdded.toDate().day == DateTime.now().day) {
+      count++;
+    }
+  }
+  //check the todos history for any todos that are not inside the todos list
+  for (var element in todosHistory) {
+    if (element.timeCompleted!.toDate().day == DateTime.now().day) {
+      //check if the todo is in the todos list
+      if (todos.where((todo) => todo.content == element.content).isEmpty) {
+        count++;
+      }
+    }
+  }
+  return count;
 }
+}
+
+

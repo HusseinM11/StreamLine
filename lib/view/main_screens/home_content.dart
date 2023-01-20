@@ -8,18 +8,18 @@ import 'package:intl/intl.dart';
 import 'package:streamline/constants/colors.dart';
 import 'package:streamline/controller/all_tasksController.dart';
 import 'package:streamline/controller/habits_controller.dart';
-import 'package:streamline/widgets/dialog_box.dart';
-import 'package:streamline/widgets/home_widgets.dart';
+import 'package:streamline/view/widgets/dialog_box.dart';
+import 'package:streamline/view/widgets/home_widgets.dart';
 
 import '../../constants/firebase_constants.dart';
 import '../../controller/activity_controller.dart';
 import '../../controller/auth_controller.dart';
 import '../../controller/todo_controller.dart';
 import '../../controller/users_controller.dart';
-import '../../widgets/activity_tile.dart';
-import '../../widgets/add_activity.dart';
-import '../../widgets/edit_activity.dart';
-import '../../widgets/todo_tile.dart';
+import '../widgets/activity_tile.dart';
+import '../widgets/add_activity.dart';
+import '../widgets/edit_activity.dart';
+import '../widgets/todo_tile.dart';
 
 class HomeContentScreen extends StatelessWidget {
   HomeContentScreen({super.key});
@@ -92,39 +92,44 @@ class HomeContentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     void addActivity() {
       showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10.0),
-                                        topRight: Radius.circular(10.0),
-                                      ),
-                                    ),
-                                    isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10.0),
+              topRight: Radius.circular(10.0),
+            ),
+          ),
+          isScrollControlled: true,
           context: context,
           builder: (context) {
-            return AddActivityDialog();
+            return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: AddActivityDialog(),
+            );
           });
     }
 
     void editActivity(int index) {
       debugPrint('pressed');
       showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10.0),
-                                        topRight: Radius.circular(10.0),
-                                      ),
-                                    ),
-                                    isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10.0),
+              topRight: Radius.circular(10.0),
+            ),
+          ),
+          isScrollControlled: true,
           context: context,
           builder: (context) {
-            return EditActivityDialog(
-              index: index,
+            return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: EditActivityDialog(
+                index: index,
+              ),
             );
           });
     }
 
     return Scaffold(
-      
         backgroundColor: const Color(0xFFFDEAC1),
         body: SingleChildScrollView(
           child: Column(
@@ -135,7 +140,7 @@ class HomeContentScreen extends StatelessWidget {
                     color: Color(0xFFFDEAC1),
                     image: DecorationImage(
                       alignment: Alignment.bottomCenter,
-                      image: AssetImage('images/home/homebg.png'),
+                      image: AssetImage('assets/images/home/homebg.png'),
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -199,7 +204,8 @@ class HomeContentScreen extends StatelessWidget {
                               return DailyStatsTab(
                                 label: 'To do\'s Done',
                                 completed:
-                                    controller.numberOfCompletedTodosToday(),
+                                    Get.find<TodosController>()
+                                .numberOfCompletedTodosToday(),
                               );
                             },
                           ),
@@ -317,15 +323,9 @@ class HomeContentScreen extends StatelessWidget {
                                     isScrollControlled: true,
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return SingleChildScrollView(
-                                        padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                                        // the keyboard automatically disappears
-                                        // when the bottom sheet is opened
-                                        keyboardDismissBehavior:
-                                            ScrollViewKeyboardDismissBehavior
-                                                .onDrag,
-
+                                      return Padding(
+                                        padding:
+                                            MediaQuery.of(context).viewInsets,
                                         child: DialogBox(
                                             controller: _controller,
                                             onCancel: () {

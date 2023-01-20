@@ -3,9 +3,9 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 
-import '../constants/colors.dart';
-import '../controller/todo_controller.dart';
-import '../model/todo.dart';
+import '../../constants/colors.dart';
+import '../../controller/todo_controller.dart';
+import '../../model/todo.dart';
 
 class TodoTile extends StatelessWidget {
   final String uid;

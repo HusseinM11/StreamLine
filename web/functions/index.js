@@ -14,8 +14,8 @@ exports.myScheduledCloudFunction = functions.pubsub.schedule('0 0 * * *').timeZo
               // The doc object exists and has a ref property, so you can call update on it
               await habitDoc.ref.update({ 
                 'iscompleted' : false,
-                'completedcount': 0,
-                'timecompleted': FieldValue.delete()
+                'completedcount': 0
+                
               });
             }
         });
@@ -23,5 +23,3 @@ exports.myScheduledCloudFunction = functions.pubsub.schedule('0 0 * * *').timeZo
 
     return null;
 });
-// how to deploy this function to firebase?
-// firebase deploy --only functions

@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 import '../constants/firebase_constants.dart';
 import '../model/habit.dart';
-import '../widgets/snackbar.dart';
+import '../view/widgets/snackbar.dart';
 
 class HabitsController extends GetxController {
   //var habits = <HabitModel>[].obs;
@@ -266,8 +266,8 @@ class HabitsController extends GetxController {
 
   int numberOfCompletedHabitsToday() {
     int count = 0;
-    for (var element in habits) {
-      if (element.isCompleted == true) {
+    for (var element in habitsHistory) {
+      if (element.timeCompleted!.toDate().day ==  DateTime.now().day) {
         count++;
       }
     }
@@ -283,4 +283,24 @@ class HabitsController extends GetxController {
     }
     return count;
   }
+
+ 
+  int totalHabitsToday() {
+  int count = 0;
+  for (var element in habits) {
+    if (element.timeAdded.toDate().day == DateTime.now().day) {
+      count++;
+    }
+  }
+
+  for (var element in habitsHistory) {
+    if (element.timeCompleted!.toDate().day == DateTime.now().day) {
+      //check if the todo is in the todos list
+      if (habits.where((habit) => habit.content == element.content).isEmpty) {
+        count++;
+      }
+    }
+  }
+  return count;
+}
 }

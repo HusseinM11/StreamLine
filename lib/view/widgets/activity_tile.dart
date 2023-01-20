@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../constants/colors.dart';
-import '../model/activity.dart';
+import '../../constants/colors.dart';
+import '../../model/activity.dart';
 
 class ActivityTile extends StatelessWidget {
   final Function() onPlay;
