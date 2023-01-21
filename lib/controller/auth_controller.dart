@@ -25,7 +25,7 @@ class AuthController extends GetxController {
     try {
       UserCredential _authResult = await auth.createUserWithEmailAndPassword(
           email: email.trim(), password: password);
-      //create user in database.dart
+      
       UserModel _user = UserModel(
         id: _authResult.user!.uid,
         name: name,

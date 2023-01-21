@@ -153,6 +153,3 @@ class ReportSheet extends StatelessWidget {
     );
   }
 }
-//delete a cloud function firebase
-// in terminal
-// firebase functions:delete deleteReport

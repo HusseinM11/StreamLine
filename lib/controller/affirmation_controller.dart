@@ -19,7 +19,7 @@ class AffirmationController extends GetxController {
   Future<void> fetchAffirmation() async {
     try {
       final response = await rootBundle.loadString(
-          '/Users/flyostrich/StreamLine/streamline/assets/data/affirmations.json');
+          'assets/data/affirmations.json');
       final data = jsonDecode(response);
       // Select a random affirmation from json file
       int index = Random().nextInt(data.length);

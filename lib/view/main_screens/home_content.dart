@@ -27,30 +27,24 @@ class HomeContentScreen extends StatelessWidget {
   final _controller = TextEditingController();
 
   void startActivity(int index) {
-    debugPrint('started');
     ActivitiesController controller = Get.find<ActivitiesController>();
     // start time
     var startTime = DateTime.now();
-
     // include the time thats elapes
     int elapsedTime = controller.activities[index].timeSpent;
-
-    //habit started or stopped
+    //activity started or stopped
     controller.activities[index].started =
         !controller.activities[index].started;
-    /*  setState(() {
-      habitList[index][3] = !habitList[index][3];
-    }); */
-    // check if habit started or stopped
-
+    
+    // if activity started then start timer
     if (controller.activities[index].started &&
         !controller.activities[index].isCompleted) {
       Timer.periodic(const Duration(milliseconds: 100), (timer) {
-        // cancel if habit stopped
+        // cancel if activity stopped
         if (!controller.activities[index].started) {
           timer.cancel();
         }
-
+        
         var currentTime = DateTime.now();
         controller.activities[index].timeSpent = elapsedTime +
             currentTime.second -
@@ -62,7 +56,7 @@ class HomeContentScreen extends StatelessWidget {
             (controller.activities[index].timeGoal * 60 * 1000)) {
           controller.activities[index].isCompleted = true;
           controller.activities[index].started = false;
-          print('if clause ran');
+      
           controller.saveActivity(
               uid: controller.uid,
               actvId: controller.activities[index].actvId,
@@ -266,7 +260,7 @@ class HomeContentScreen extends StatelessWidget {
                                   ? Center(
                                       child: TextButton(
                                       onPressed: addActivity,
-                                      child: Text(
+                                      child: const Text(
                                           'Add Your Daily Activities Here!',
                                           style: TextStyle(
                                               fontSize: 23,
@@ -373,7 +367,7 @@ class HomeContentScreen extends StatelessWidget {
                                                 });
                                           },
                                         ),
-                                        child: Text(
+                                        child: const Text(
                                             'Add Your Daily Todos Here!',
                                             style: TextStyle(
                                                 fontSize: 23,
