@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:streamline/constants/firebase_constants.dart';
 
 import '../../constants/colors.dart';
 import '../../controller/activity_controller.dart';
@@ -8,7 +9,7 @@ import '../../controller/activity_controller.dart';
 class AddActivityDialog extends StatelessWidget {
   AddActivityDialog({super.key});
 
-  final activitiesController = Get.put(ActivitiesController());
+  final activitiesController = Get.put(ActivitiesController(firestore: firebaseFirestore));
 
   final TextEditingController _activityNameController = TextEditingController();
 

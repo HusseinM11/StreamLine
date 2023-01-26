@@ -16,18 +16,20 @@ class AffirmationController extends GetxController {
     super.onInit();
   }
 
-  Future<void> fetchAffirmation() async {
+  Future<String> fetchAffirmation() async {
     try {
-      final response = await rootBundle.loadString(
-          'assets/data/affirmations.json');
+      final response =
+          await rootBundle.loadString('assets/data/affirmations.json');
       final data = jsonDecode(response);
       // Select a random affirmation from json file
       int index = Random().nextInt(data.length);
       _affirmation = data[index]["Quote"];
       isLoading = false;
       update();
+      return 'success';
     } catch (e) {
-      print(e);
+      return e.toString();
+      
     }
   }
 }

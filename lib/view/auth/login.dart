@@ -79,6 +79,7 @@ class _LogInState extends State<LogIn> {
                               ),
                               const SizedBox(height: 280),
                               const Text('Log In',
+                              key: ValueKey('login-text'),
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 48,
@@ -92,6 +93,7 @@ class _LogInState extends State<LogIn> {
                                       padding:
                                           const EdgeInsets.symmetric(vertical: 10),
                                       child: TextFormField(
+                                        key: const ValueKey('emailLogin-field'),
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500),
@@ -123,6 +125,7 @@ class _LogInState extends State<LogIn> {
                                       padding:
                                           const EdgeInsets.symmetric(vertical: 10),
                                       child: TextFormField(
+                                        key: const ValueKey('passwordLogin-field'),
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500),
@@ -169,6 +172,7 @@ class _LogInState extends State<LogIn> {
                                         child: CircularProgressIndicator(
                                             color: Colors.white))
                                     : AuthButton(
+                                      key: const ValueKey('submitLogin-btn'),
                                         label: 'Log in',
                                         onPressed: () {
                                           logIn();

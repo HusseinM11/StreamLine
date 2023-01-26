@@ -6,6 +6,7 @@ import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:streamline/constants/firebase_constants.dart';
 import 'package:streamline/model/habit.dart';
 
 import 'package:streamline/view/main_screens/habits.dart';
@@ -25,7 +26,7 @@ class EditHabitScreen extends StatefulWidget {
 }
 
 class _NewHabitScreenState extends State<EditHabitScreen> {
-  final habitsController = Get.put(HabitsController());
+  final habitsController = Get.put(HabitsController(firestore: firebaseFirestore));
   IconData _icon = Icons.check_circle_rounded;
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();

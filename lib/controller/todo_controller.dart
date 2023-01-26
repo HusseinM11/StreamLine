@@ -12,8 +12,12 @@ class TodosController extends GetxController {
   RxList<TodoModel> todosHistory = RxList([]);
 
   final String _uid = authController.user.uid;
-  final _firestore = FirebaseFirestore.instance;
+  //final String _uid = '312123232';
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   String get uid => _uid;
+
+  //constrcutor for the firestore initialization where it is required to give the firestore instance
+  TodosController({required this.firestore});
 
   @override
   void onInit() {
@@ -23,7 +27,7 @@ class TodosController extends GetxController {
   }
 
   Stream<List<TodoModel>> todosStream(String uid) {
-    return _firestore
+    return firestore
         .collection("users")
         .doc(_uid)
         .collection("todos")
@@ -39,7 +43,7 @@ class TodosController extends GetxController {
   }
 
   Stream<List<TodoModel>> todosHistoryStream(String uid) {
-    return _firestore
+    return firestore
         .collection("users")
         .doc(_uid)
         .collection("todoshistory")
@@ -59,7 +63,7 @@ class TodosController extends GetxController {
     required Timestamp timeAdded,
   }) async {
     try {
-      await _firestore
+      await firestore
           .collection("users")
           .doc(_uid)
           .collection("todoshistory")
@@ -77,7 +81,7 @@ class TodosController extends GetxController {
 
   Future<void> deleteTodoFromHistory(String uid, String todoId) async {
     try {
-      _firestore
+      firestore
           .collection("users")
           .doc(uid)
           .collection('todoshistory')
@@ -89,43 +93,46 @@ class TodosController extends GetxController {
     }
   }
 
-  Future<void> addTodo({
+  Future<String> addTodo({
     required String content,
   }) async {
     try {
-      await _firestore.collection("users").doc(_uid).collection("todos").add({
+      await firestore.collection("users").doc(_uid).collection("todos").add({
         'content': content,
         'iscompleted': false,
         'timeadded': Timestamp.now(),
       });
+      return 'success';
     } catch (e) {
       print(e);
       rethrow;
     }
   }
 
-  Future<void> deleteTodo(String uid, String todoId) async {
+  Future<String> deleteTodo(String uid, String todoId) async {
     try {
-      _firestore
+      firestore
           .collection("users")
           .doc(uid)
           .collection('todos')
           .doc(todoId)
           .delete();
+          return 'success';
     } catch (e) {
       print(e);
       rethrow;
     }
   }
 
-  Future<void> completeTodo(String uid, String todoId) async {
+  Future<String> completeTodo(String uid, String todoId) async {
     try {
-      _firestore
+      firestore
           .collection("users")
           .doc(uid)
           .collection('todos')
           .doc(todoId)
           .update({'iscompleted': true, 'timecompleted': Timestamp.now()});
+          return 'success';
     } catch (e) {
       print(e);
       rethrow;
@@ -134,7 +141,7 @@ class TodosController extends GetxController {
 
   Future<void> uncompleteTodo(String uid, String todoId) async {
     try {
-      _firestore
+      firestore
           .collection("users")
           .doc(uid)
           .collection('todos')
@@ -167,23 +174,21 @@ class TodosController extends GetxController {
   }
 
   int totalTodosToday() {
-  int count = 0;
-  for (var element in todos) {
-    if (element.timeAdded.toDate().day == DateTime.now().day) {
-      count++;
-    }
-  }
-  //check the todos history for any todos that are not inside the todos list
-  for (var element in todosHistory) {
-    if (element.timeCompleted!.toDate().day == DateTime.now().day) {
-      //check if the todo is in the todos list
-      if (todos.where((todo) => todo.content == element.content).isEmpty) {
+    int count = 0;
+    for (var element in todos) {
+      if (element.timeAdded.toDate().day == DateTime.now().day) {
         count++;
       }
     }
+    //check the todos history for any todos that are not inside the todos list
+    for (var element in todosHistory) {
+      if (element.timeCompleted!.toDate().day == DateTime.now().day) {
+        //check if the todo is in the todos list
+        if (todos.where((todo) => todo.content == element.content).isEmpty) {
+          count++;
+        }
+      }
+    }
+    return count;
   }
-  return count;
 }
-}
-
-

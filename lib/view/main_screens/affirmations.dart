@@ -107,6 +107,7 @@ class _AffirmationsScreenState extends State<AffirmationsScreen> {
                   const SizedBox(height: 200),
                   Center(
                     child: TextButton(
+                      key: const ValueKey('ready-btn'),
                       onPressed: () {
                         Get.toNamed('/home');
                       },

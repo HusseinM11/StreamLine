@@ -10,6 +10,7 @@ class AuthButton extends StatelessWidget {
     return Container(
       width: double.infinity,
       child: ElevatedButton(
+       
         onPressed: onPressed,
         // ignore: sort_child_properties_last
         child: Text(label,

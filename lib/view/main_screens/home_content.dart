@@ -299,7 +299,7 @@ class HomeContentScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Todo\'s',
+                              const Text('To do\'s',
                                   style: TextStyle(
                                       fontSize: 26,
                                       fontWeight: FontWeight.w600)),
@@ -307,6 +307,8 @@ class HomeContentScreen extends StatelessWidget {
                                 height: 25,
                                 width: 60,
                                 child: PlusButton(
+                                  // addTodo-btn key
+                                  key: const ValueKey('addTodo-btn'),
                                   onPressed: () => showModalBottomSheet(
                                     shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(

@@ -2,12 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:streamline/constants/colors.dart';
+import 'package:streamline/controller/users_controller.dart';
 import 'package:streamline/utils/root.dart';
 
-import '../constants/firebase_constants.dart';
 import '../model/user.dart';
 
 class AuthController extends GetxController {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  //create a constructor for the auth initilization
+  AuthController({required this.auth});
+
+  final userController = Get.put(UserController());
   static AuthController instance = Get.find();
   Rxn<User> _firebaseUser = Rxn<User>();
 
@@ -20,12 +25,12 @@ class AuthController extends GetxController {
     _firebaseUser.bindStream(auth.authStateChanges());
   }
 
-  void register(
+  Future<String> register(
       {required String email, required password, required String name}) async {
     try {
       UserCredential _authResult = await auth.createUserWithEmailAndPassword(
           email: email.trim(), password: password);
-      
+
       UserModel _user = UserModel(
         id: _authResult.user!.uid,
         name: name,
@@ -35,6 +40,7 @@ class AuthController extends GetxController {
         userController.user = _user;
         Get.to(Root());
       }
+      return "Success";
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         Get.snackbar('Error', 'Password is too weak. Please try again.',
@@ -47,15 +53,19 @@ class AuthController extends GetxController {
             backgroundColor: AppColors.darkGrey.withOpacity(0.7),
             colorText: Colors.white);
       }
+      return e.message!;
+    } catch (e) {
+      rethrow;
     }
   }
 
-  void login({required String email, required password}) async {
+  Future<String> login({required String email, required password}) async {
     try {
       UserCredential _authResult = await auth.signInWithEmailAndPassword(
           email: email.trim(), password: password);
       userController.user = await userController.getUser(_authResult.user!.uid);
       Get.toNamed('/affirmations');
+      return "Success";
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         Get.snackbar('Error', 'No user found with the given email.',
@@ -68,12 +78,16 @@ class AuthController extends GetxController {
             backgroundColor: AppColors.darkGrey.withOpacity(0.7),
             colorText: Colors.white);
       }
+      return e.message!;
     }
   }
 
-  void signOut() async {
+  Future<String> signOut() async {
     await auth.signOut();
     userController.clear();
     Get.offNamed('/welcome_screen');
+    return 'Success';
   }
+  // write a test case for the signOut method
+  
 }

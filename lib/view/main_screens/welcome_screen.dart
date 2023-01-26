@@ -58,6 +58,7 @@ class WelcomeScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             AuthButton(
+                               key: const ValueKey('login-btn'),
                               label: 'Log in',
                               onPressed: () {
                                 Navigator.pushReplacementNamed(
@@ -70,12 +71,14 @@ class WelcomeScreen extends StatelessWidget {
                             Container(
                               width: double.infinity,
                               child: ElevatedButton(
+                                 key: const ValueKey('register-btn'),
                                 onPressed: () {
                                   Navigator.pushReplacementNamed(
                                       context, '/sign_up');
                                 },
                                 // ignore: sort_child_properties_last
                                 child: const Text('Create an account',
+                               
                                     style: TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.w500)),

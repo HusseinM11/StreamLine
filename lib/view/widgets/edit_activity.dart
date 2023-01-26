@@ -189,6 +189,8 @@ class EditActivityDialog extends StatelessWidget {
 }
  */
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
@@ -200,7 +202,7 @@ class EditActivityDialog extends StatelessWidget {
   int index;
   EditActivityDialog({super.key, required this.index});
 
-  final activitiesController = Get.put(ActivitiesController());
+  final activitiesController = Get.put(ActivitiesController(firestore: FirebaseFirestore.instance));
 
   // make a final form global key
   static final _formKey = GlobalKey<FormState>();

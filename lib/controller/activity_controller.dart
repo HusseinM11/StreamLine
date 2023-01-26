@@ -9,8 +9,12 @@ class ActivitiesController extends GetxController {
   RxList<ActivityModel> activities = RxList([]);
   RxList<ActivityModel> activitiesHistory = RxList([]);
   //var activities = <ActivityModel>[].obs;
-  final String _uid = authController.user.uid;
-  final _firestore = FirebaseFirestore.instance;
+  final String _uid = "312123232";
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  //constructor to initialize the firestore
+  ActivitiesController({required this.firestore});
+
   String get uid {
     return _uid;
   }
@@ -24,7 +28,7 @@ class ActivitiesController extends GetxController {
   }
 
   Stream<List<ActivityModel>> activityStream(String uid) {
-    return _firestore
+    return firestore
         .collection("users")
         .doc(_uid)
         .collection("activities")
@@ -42,7 +46,7 @@ class ActivitiesController extends GetxController {
   }
 
   Stream<List<ActivityModel>> activitiesHistoryStream(String uid) {
-    return _firestore
+    return firestore
         .collection("users")
         .doc(_uid)
         .collection("activitieshistory")
@@ -62,7 +66,7 @@ class ActivitiesController extends GetxController {
     required Timestamp timeAdded,
   }) async {
     try {
-      await _firestore
+      await firestore
           .collection("users")
           .doc(_uid)
           .collection("activitieshistory")
@@ -78,12 +82,12 @@ class ActivitiesController extends GetxController {
     }
   }
 
-  Future<void> addActivity({
+  Future<String> addActivity({
     required content,
     required timeGoal,
   }) async {
     try {
-      await _firestore
+      await firestore
           .collection("users")
           .doc(_uid)
           .collection("activities")
@@ -95,9 +99,10 @@ class ActivitiesController extends GetxController {
         'timeadded': Timestamp.now(),
         'timespent': 0,
       });
+      return "success";
     } catch (e) {
       print(e);
-      rethrow;
+      return e.toString();
     }
   }
 
@@ -108,7 +113,7 @@ class ActivitiesController extends GetxController {
     required int timeGoal,
   }) async {
     try {
-      _firestore
+      firestore
           .collection("users")
           .doc(uid)
           .collection("activities")
@@ -132,7 +137,7 @@ class ActivitiesController extends GetxController {
       required isCompleted,
       timeCompleted}) async {
     try {
-      _firestore
+      firestore
           .collection("users")
           .doc(uid)
           .collection("activities")
@@ -150,12 +155,12 @@ class ActivitiesController extends GetxController {
     }
   }
 
-  Future<void> restartActivity({
+  Future<String> restartActivity({
     required String uid,
     required String actvId,
   }) async {
     try {
-      _firestore
+      firestore
           .collection("users")
           .doc(uid)
           .collection("activities")
@@ -165,22 +170,24 @@ class ActivitiesController extends GetxController {
         'timespent': 0,
         'iscompleted': false,
       });
+      return 'success';
     } catch (e) {
       print(e);
       rethrow;
     }
   }
 
-  Future<void> deleteActivity(
+  Future<String> deleteActivity(
       {required String uid, required String actvId}) async {
     try {
-      _firestore
+      firestore
           .collection("users")
           .doc(uid)
           .collection('activities')
           .doc(actvId)
           .delete();
       Get.back();
+      return "success";
     } catch (e) {
       print(e);
       rethrow;
@@ -190,8 +197,7 @@ class ActivitiesController extends GetxController {
   int numberOfCompletedActivitiesToday() {
     int count = 0;
     for (var element in activitiesHistory) {
-      if (
-          element.timeCompleted!.toDate().day == DateTime.now().day) {
+      if (element.timeCompleted!.toDate().day == DateTime.now().day) {
         count++;
       }
     }
@@ -207,22 +213,25 @@ class ActivitiesController extends GetxController {
     }
     return count;
   }
-  int totalActivitiesToday() {
-  int count = 0;
-  for (var element in activities) {
-    if (element.timeAdded.toDate().day == DateTime.now().day) {
-      count++;
-    }
-  }
 
-  for (var element in activitiesHistory) {
-    if (element.timeCompleted!.toDate().day == DateTime.now().day) {
-      //check if the todo is in the todos list
-      if (activities.where((activity) => activity.content == element.content).isEmpty) {
+  int totalActivitiesToday() {
+    int count = 0;
+    for (var element in activities) {
+      if (element.timeAdded.toDate().day == DateTime.now().day) {
         count++;
       }
     }
+
+    for (var element in activitiesHistory) {
+      if (element.timeCompleted!.toDate().day == DateTime.now().day) {
+        //check if the todo is in the todos list
+        if (activities
+            .where((activity) => activity.content == element.content)
+            .isEmpty) {
+          count++;
+        }
+      }
+    }
+    return count;
   }
-  return count;
-}
 }

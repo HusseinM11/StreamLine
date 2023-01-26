@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:streamline/view/auth/login.dart';
@@ -15,7 +16,7 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  Get.put(AuthController());
+  Get.put(AuthController(auth: FirebaseAuth.instance));
 
   runApp(const MyApp());
 }
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialBinding: InitialBinding(),
       home: Root(),
+     // initialRoute: '/welcome_screen',
       
       getPages: [
         GetPage(name: '/welcome_screen', page: () => const WelcomeScreen()),

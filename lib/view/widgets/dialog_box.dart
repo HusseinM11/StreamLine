@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import 'package:streamline/constants/firebase_constants.dart';
 import 'package:streamline/view/widgets/dialog_button.dart';
 
 import '../../constants/colors.dart';
@@ -15,7 +16,7 @@ class DialogBox extends StatelessWidget {
       required this.controller,
       required this.onCancel,
       required this.onAdd});
-  final todosController = Get.put(TodosController());
+  final todosController = Get.put(TodosController(firestore: firebaseFirestore));
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -79,6 +80,7 @@ class DialogBox extends StatelessWidget {
                   child: Form(
                     key: _formKey,
                     child: TextFormField(
+                      key:  const ValueKey('todo-field'),
                         maxLength: 35,
                         controller: controller,
                         decoration: InputDecoration(
@@ -99,6 +101,7 @@ class DialogBox extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MaterialButton(
+                  key: const ValueKey('addSubmit-button'),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                   elevation: 0,

@@ -29,8 +29,8 @@ dependencies:
   
   firebase_auth: ^4.1.2
   firebase_storage: ^11.0.5
-  cloud_firestore: ^4.0.5
-  firebase_core: ^2.2.0
+  cloud_firestore: ^4.3.1
+  firebase_core: ^2.4.1
   flutter_feather_icons: ^2.0.0+1
   intl: ^0.17.0
   percent_indicator: ^4.2.2
@@ -44,19 +44,30 @@ dependencies:
   http: ^0.13.5
   animated_text_kit: ^4.2.2
   mailer: ^6.0.0
-  flutter_local_notifications: ^13.0.0
-  flutter_launcher_icons: ^0.11.0
+
+  
+ 
   
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  mockito: ^5.0.15
+  fake_cloud_firestore: ^2.3.0+3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  firebase_auth_mocks: ^0.10.3
+  integration_test:
+    sdk: flutter
+  flutter_launcher_icons: "^0.11.0"
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/logo.png"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -109,7 +120,4 @@ flutter:
         - asset: assets/fonts/Barlow-Light.ttf
           weight: 300
 
-  flutter_icons:
-  image_path: "icons/logo.png"
-  android: true
-  ios: true
+  

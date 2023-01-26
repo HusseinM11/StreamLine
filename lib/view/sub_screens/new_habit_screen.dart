@@ -8,6 +8,7 @@ import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:streamline/constants/firebase_constants.dart';
 import 'package:streamline/model/habit.dart';
 
 import 'package:streamline/view/main_screens/habits.dart';
@@ -31,7 +32,7 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
   String? description;
   int repeat = 1;
   IconData _icon = Icons.check_circle_rounded;
-  final habitsController = Get.put(HabitsController());
+  final habitsController = Get.put(HabitsController(firestore: firebaseFirestore));
 
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
@@ -362,7 +363,7 @@ class _NewHabitScreenState extends State<NewHabitScreen> {
                                     onPressed: () {
                                       if (_formKey.currentState!
                                           .validate()) {
-                                        HabitsController().addHabit(
+                                        HabitsController(firestore: firebaseFirestore).addHabit(
                                           content: title,
                                           description: description,
                                           repeat: repeat,

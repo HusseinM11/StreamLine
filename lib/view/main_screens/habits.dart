@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:streamline/constants/firebase_constants.dart';
 import 'package:streamline/controller/habits_controller.dart';
 import 'package:streamline/view/main_screens/progress.dart';
 import 'package:streamline/view/main_screens/settings.dart';
@@ -18,7 +19,7 @@ import '../widgets/snackbar.dart';
 import 'home.dart';
 
 class HabitsScreen extends StatelessWidget {
-  final habitsController = Get.put(HabitsController());
+  final habitsController = Get.put(HabitsController(firestore: firebaseFirestore));
   HabitsScreen({super.key});
 
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =

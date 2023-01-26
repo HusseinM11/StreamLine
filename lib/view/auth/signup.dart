@@ -102,6 +102,7 @@ class _SignUpState extends State<SignUp> {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 10),
                                     child: TextFormField(
+                                       key: const ValueKey('name-field'),
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500),
@@ -124,6 +125,7 @@ class _SignUpState extends State<SignUp> {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 10),
                                     child: TextFormField(
+                                      key: const ValueKey('email-field'),
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500),
@@ -156,6 +158,7 @@ class _SignUpState extends State<SignUp> {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 10),
                                     child: TextFormField(
+                                      key: const ValueKey('password-field'),
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500),
@@ -195,6 +198,7 @@ class _SignUpState extends State<SignUp> {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 10),
                                     child: TextFormField(
+                                      key: const ValueKey('confirmPassword-field'),
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500),
@@ -244,6 +248,7 @@ class _SignUpState extends State<SignUp> {
                                     //cupertino progress indicator
                                     (child: CircularProgressIndicator(color: AppColors.orange2))       
                                   : AuthButton(
+                                    key: const ValueKey('submit-btn'),
                                       label: 'Submit',
                                       onPressed: () {
                                         signUp();
