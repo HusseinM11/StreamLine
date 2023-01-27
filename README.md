@@ -1,4 +1,4 @@
-# streamline
+# Streamline
 
 A new Flutter project.
 
