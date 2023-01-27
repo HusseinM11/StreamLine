@@ -3,7 +3,7 @@
 Streamline is an all in one productivity tracker, where you can track your daily habits, time certain activities and create to-do's. The app works on IOS and Android.
 
 # Screenshots
-
+<table>
 <tr>
     <td>
       <img src="https://user-images.githubusercontent.com/43125188/215011293-3c640560-af73-4468-9cf2-bf43d9bc9352.png" style="padding: 10px"/>
@@ -38,4 +38,4 @@ Streamline is an all in one productivity tracker, where you can track your daily
     </td>
   </tr>
 
-
+</table>
